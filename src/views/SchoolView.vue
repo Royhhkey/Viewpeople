@@ -192,13 +192,13 @@ onMounted(()=>{
   margin-bottom: 24px;
 }
 
-.table-container {
+/* .table-container {
   background: #fafafa;
   padding: 16px;
   border-radius: 4px;
   margin-top: 24px;
   overflow-x: auto;
-}
+} */
 
 /* 移动端适配 */
 @media screen and (max-width: 768px) {
@@ -224,7 +224,9 @@ onMounted(()=>{
 
   .table-container {
     padding: 0px;
-    margin-top: 3vw;
+    /* margin-top: 3vw; */
+    overflow-x: auto;
+    white-space: nowrap;
   }
 }
 </style>

@@ -3,6 +3,7 @@ import { message } from 'ant-design-vue';
 
 const request = axios.create({
     // baseURL: import.meta.env.VITE_API_URL,
+    // baseURL: import.meta.env.VITE_API_URL,
     baseURL:import.meta.env.VITE_API_URL||'http://10.227.224.6:3301',
     timeout: 3000,
 });
