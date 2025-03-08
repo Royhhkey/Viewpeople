@@ -1,6 +1,9 @@
 <script setup>
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 import CircleChart from '../components/CircleChart.vue';
+import DataTable from '../components/DataTable.vue';
+
+import {getdata} from '../api/index.js';
 
 const selectedDate = ref(null);
 const studentStats = ref({
@@ -8,11 +11,66 @@ const studentStats = ref({
   inSchool: 345,
   active: 456
 });
+const tableData = ref([]);
+const columns = [
+  {
+    title: '序号',
+    dataIndex: 'key',
+    key: 'key',
+    width: '10%'
+  },
+  {
+    title: '单位',
+    dataIndex: 'unit',
+    key: 'unit',
+    width: '20%'
+  },
+  {
+    title: '总人数',
+    dataIndex: 'total',
+    key: 'total',
+    width: '10%'
+  },
+  {
+    title: '在校人数',
+    dataIndex: 'inSchool',
+    key: 'inSchool',
+    width: '10%'
+  },
+  {
+    title: '活跃人数',
+    dataIndex: 'active',
+    key: 'active',
+    width: '10%'
+  },
+  {
+    title: '非活跃人数',
+    dataIndex: 'inactive',
+    key: 'inactive',
+    width: '10%'
+  }
+];
+
+const test  =async()=>{
+  const {data} = await getdata('2023-06-01');
+  tableData.value =data.DATA.map((item, index) => ({
+      key: (index + 1).toString(),
+      unit: item.STU_TYPE,
+      total: item.STU_TOTAL,
+      inSchool: item.STU_SCHOOL,
+      active: item.STU_ACTIVE,
+      inactive: item.STU_NEGATIVE
+  }));
+  console.log(data);
+}
 
 const handleDateChange = (date) => {
   selectedDate.value = date;
   // 这里可以添加获取数据的逻辑
 };
+onMounted(()=>{
+  test();
+})
 </script>
 
 <template>
@@ -32,9 +90,9 @@ const handleDateChange = (date) => {
         <CircleChart chartId="class1Chart" :data="studentStats" />
       </div>
 
-      <div class="chart-container">
-        <CircleChart chartId="class2Chart"  :data="studentStats" />
-      </div>
+    </div>
+    <div class="table-container">
+      <DataTable :dataSource="tableData" :columns="columns" />
     </div>
   </div>
 </template>
@@ -102,6 +160,8 @@ const handleDateChange = (date) => {
   color: #1890ff;
 }
 
+
+
 /* 移动端适配 */
 @media screen and (max-width: 768px) {
   .view-container {
@@ -123,5 +183,8 @@ const handleDateChange = (date) => {
     padding: 2vw;
     margin-bottom: 3vw;
   }
+  .table-container {
+    overflow-x: auto;
+}
 }
 </style>

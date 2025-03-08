@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
-
+import {getdata} from './api/index.js';
+import { onMounted } from 'vue';
 const router = useRouter();
 const menuItems = [
   { key: 'school', label: '校级', path: '/school' },
@@ -8,7 +9,15 @@ const menuItems = [
   { key: 'counselor', label: '辅导员', path: '/counselor' },
   { key: 'teacher', label: '班导师', path: '/teacher' }
 ];
+const test  = async () => {
+  const {data} = await getdata();
+  router.push(menuItems[data.QX_TYPE]);
+  console.log(data);
+};
 
+onMounted(() => {
+  test();
+});
 const handleTabChange = (key) => {
   router.push(key);
 };

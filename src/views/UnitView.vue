@@ -1,12 +1,16 @@
 <script setup>
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 import CircleChart from '../components/CircleChart.vue';
 import DataTable from '../components/DataTable.vue';
+import {getdata} from '../api/index.js';
 
 const selectedDate = ref(null);
 const totalStudents = ref(1234);
 const inSchoolStudents = ref(345);
 const activeStudents = ref(456);
+
+
+
 
 const tableData = ref([
   {
@@ -80,6 +84,8 @@ const columns = [
   }
 ];
 
+
+
 const handleDateChange = (date) => {
   selectedDate.value = date;
   // 这里可以添加获取数据的逻辑
@@ -90,6 +96,24 @@ const chartData = {
   inSchool: inSchoolStudents.value,
   active: activeStudents.value
 };
+
+const test  =async()=>{
+  const {data} = await getdata('2023-06-01');
+  tableData.value =data.DATA.map((item, index) => ({
+      key: (index + 1).toString(),
+      unit: item.STU_TYPE,
+      total: item.STU_TOTAL,
+      inSchool: item.STU_SCHOOL,
+      active: item.STU_ACTIVE,
+      inactive: item.STU_NEGATIVE
+  }));
+
+  console.log(data);
+}
+
+onMounted(()=>{
+  test();
+})
 </script>
 
 <template>
@@ -170,9 +194,9 @@ const chartData = {
 
 /* 移动端适配 */
 @media screen and (max-width: 768px) {
-  .view-container {
+  /* .view-container {
     padding: 3vw;
-  }
+  } */
 
   .header {
     flex-direction: column;
@@ -191,8 +215,6 @@ const chartData = {
   }
 
   .table-container {
-    margin-top: 2vw;
-    padding: 2vw;
     overflow-x: auto;
   }
 }

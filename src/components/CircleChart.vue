@@ -163,7 +163,7 @@ const initChart = (chartId, data) => {
             show: true,
             fontSize: 14,
             fontWeight: 'bold',
-            formatter: '{b}\n{c} 人'
+            formatter: '{b}\n{c} 人' 
           }
         },
         labelLine: {
@@ -219,7 +219,31 @@ watch(() => props.data, (newData) => {
   <div class="chart-container">
     <h3 v-if="title" class="chart-title">{{ title }}</h3>
     <div :id="chartId" class="chart"></div>
+    <div class="data-stats">
+      <div class="data-item">
+        <span class="label">总人数</span>
+        <div class="value-wrapper">
+          <span class="value">{{ data.total }}</span>
+          <span class="unit">人</span>
+        </div>
+      </div>
+      <div class="data-item">
+        <span class="label">在校人数</span>
+        <div class="value-wrapper">
+          <span class="value">{{ data.inSchool }}</span>
+          <span class="unit">人</span>
+        </div>
+      </div>
+      <div class="data-item">
+        <span class="label">在校活动人数</span>
+        <div class="value-wrapper">
+          <span class="value">{{ data.active }}</span>
+          <span class="unit">人</span>
+        </div>
+      </div>
+    </div>
   </div>
+
 </template>
 
 <style scoped>
@@ -265,16 +289,51 @@ watch(() => props.data, (newData) => {
   gap: 16px;
 }
 
+.data-stats {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
 .data-item {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
+  align-items: center;
+  padding: 8px 12px;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.data-item:hover {
+  background: rgba(24, 144, 255, 0.05);
 }
 
 .label {
+  font-size: 14px;
   color: #666;
 }
 
+.value-wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1890ff;
+}
+
+.unit {
+  font-size: 12px;
+  color: #999;
+}
 .value {
   font-weight: bold;
   color: #1890ff;

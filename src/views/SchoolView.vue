@@ -1,7 +1,9 @@
 <script setup>
-import { ref } from 'vue';
+import { ref ,onMounted} from 'vue';
 import CircleChart from '../components/CircleChart.vue';
 import DataTable from '../components/DataTable.vue';
+
+import {getdata} from '../api/index.js';
 
 const selectedDate = ref(null);
 const totalStudents = ref(1234);
@@ -72,6 +74,24 @@ const chartData = {
   inSchool: inSchoolStudents.value,
   active: activeStudents.value
 };
+const test  =async()=>{
+  const {data} = await getdata('2023-06-01');
+  tableData.value =data.DATA.map((item, index) => ({
+      key: (index + 1).toString(),
+      unit: item.STU_TYPE,
+      total: item.STU_TOTAL,
+      inSchool: item.STU_SCHOOL,
+      active: item.STU_ACTIVE,
+      inactive: item.STU_NEGATIVE
+  }));
+
+  console.log(data);
+}
+onMounted(()=>{
+  test();
+})
+
+
 </script>
 
 <template>
@@ -161,7 +181,7 @@ const chartData = {
     padding: 2vw;
     border-radius: 4px;
     margin-top: 2vw;
-    margin-top: 24px;
+    /* margin-top: 24px; */
   }
 }
 </style>
