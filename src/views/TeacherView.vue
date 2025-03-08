@@ -1,11 +1,13 @@
 <script setup>
 import { ref } from 'vue';
-import { DatePicker } from 'ant-design-vue';
+import CircleChart from '../components/CircleChart.vue';
 
 const selectedDate = ref(null);
-const totalStudents = ref(1234);
-const inSchoolStudents = ref(345);
-const activeStudents = ref(456);
+const studentStats = ref({
+  total: 1234,
+  inSchool: 345,
+  active: 456
+});
 
 const handleDateChange = (date) => {
   selectedDate.value = date;
@@ -27,43 +29,11 @@ const handleDateChange = (date) => {
     
     <div class="statistics-container">
       <div class="chart-container">
-        <h3>计算机学院一班</h3>
-        <div class="chart">
-          <div class="chart-placeholder">
-            <div class="data-item">
-              <span class="label">总人数</span>
-              <span class="value">{{ totalStudents }}</span>
-            </div>
-            <div class="data-item">
-              <span class="label">在校人数</span>
-              <span class="value">{{ inSchoolStudents }}</span>
-            </div>
-            <div class="data-item">
-              <span class="label">在校活动人数</span>
-              <span class="value">{{ activeStudents }}</span>
-            </div>
-          </div>
-        </div>
+        <CircleChart chartId="class1Chart" :data="studentStats" />
       </div>
 
       <div class="chart-container">
-        <h3>计算机学院二班</h3>
-        <div class="chart">
-          <div class="chart-placeholder">
-            <div class="data-item">
-              <span class="label">总人数</span>
-              <span class="value">{{ totalStudents }}</span>
-            </div>
-            <div class="data-item">
-              <span class="label">在校人数</span>
-              <span class="value">{{ inSchoolStudents }}</span>
-            </div>
-            <div class="data-item">
-              <span class="label">在校活动人数</span>
-              <span class="value">{{ activeStudents }}</span>
-            </div>
-          </div>
-        </div>
+        <CircleChart chartId="class2Chart"  :data="studentStats" />
       </div>
     </div>
   </div>
@@ -96,10 +66,15 @@ const handleDateChange = (date) => {
   padding: 16px;
   background: #fafafa;
   border-radius: 4px;
+  margin-bottom: 24px;
 }
 
 .chart {
   margin-top: 16px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 300px;
   display: flex;
   justify-content: center;

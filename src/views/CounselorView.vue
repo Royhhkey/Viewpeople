@@ -1,10 +1,67 @@
 <script setup>
 import { ref } from 'vue';
+import CircleChart from '../components/CircleChart.vue';
+import DataTable from '../components/DataTable.vue';
 
 const selectedDate = ref(null);
-const totalStudents = ref(1234);
-const inSchoolStudents = ref(345);
-const activeStudents = ref(456);
+const class1Stats = ref({
+  total: 1234,
+  inSchool: 345,
+  active: 456
+});
+
+const class2Stats = ref({
+  total: 890,
+  inSchool: 234,
+  active: 123
+});
+
+const tableData = ref([
+  {
+    key: '1',
+    class: '计算机学院一班',
+    total: class1Stats.value.total,
+    inSchool: class1Stats.value.inSchool,
+    active: class1Stats.value.active,
+    inactive: class1Stats.value.inSchool - class1Stats.value.active
+  },
+  {
+    key: '2',
+    class: '计算机学院二班',
+    total: class2Stats.value.total,
+    inSchool: class2Stats.value.inSchool,
+    active: class2Stats.value.active,
+    inactive: class2Stats.value.inSchool - class2Stats.value.active
+  }
+]);
+
+const columns = [
+  {
+    title: '班级',
+    dataIndex: 'class',
+    key: 'class',
+  },
+  {
+    title: '总人数',
+    dataIndex: 'total',
+    key: 'total',
+  },
+  {
+    title: '在校人数',
+    dataIndex: 'inSchool',
+    key: 'inSchool',
+  },
+  {
+    title: '活动人数',
+    dataIndex: 'active',
+    key: 'active',
+  },
+  {
+    title: '在校但无活动人数',
+    dataIndex: 'inactive',
+    key: 'inactive',
+  }
+];
 
 const handleDateChange = (date) => {
   selectedDate.value = date;
@@ -26,44 +83,20 @@ const handleDateChange = (date) => {
     
     <div class="statistics-container">
       <div class="chart-container">
-        <h3>计算机学院一班</h3>
         <div class="chart">
-          <div class="chart-placeholder">
-            <div class="data-item">
-              <span class="label">总人数</span>
-              <span class="value">{{ totalStudents }}</span>
-            </div>
-            <div class="data-item">
-              <span class="label">在校人数</span>
-              <span class="value">{{ inSchoolStudents }}</span>
-            </div>
-            <div class="data-item">
-              <span class="label">在校活动人数</span>
-              <span class="value">{{ activeStudents }}</span>
-            </div>
-          </div>
+          <CircleChart chartId="counselorChart1" :data="class1Stats" />
         </div>
       </div>
 
       <div class="chart-container">
-        <h3>计算机学院二班</h3>
         <div class="chart">
-          <div class="chart-placeholder">
-            <div class="data-item">
-              <span class="label">总人数</span>
-              <span class="value">{{ totalStudents }}</span>
-            </div>
-            <div class="data-item">
-              <span class="label">在校人数</span>
-              <span class="value">{{ inSchoolStudents }}</span>
-            </div>
-            <div class="data-item">
-              <span class="label">在校活动人数</span>
-              <span class="value">{{ activeStudents }}</span>
-            </div>
-          </div>
+          <CircleChart chartId="counselorChart2" :data="class2Stats" />
         </div>
       </div>
+    </div>
+
+    <div class="table-container">
+      <DataTable :dataSource="tableData" :columns="columns" />
     </div>
   </div>
 </template>
@@ -87,6 +120,7 @@ const handleDateChange = (date) => {
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
+  margin-bottom: 24px;
 }
 
 .chart-container {
@@ -95,6 +129,7 @@ const handleDateChange = (date) => {
   padding: 16px;
   background: #fafafa;
   border-radius: 4px;
+  margin-bottom: 24px;
 }
 
 .chart {
@@ -105,25 +140,11 @@ const handleDateChange = (date) => {
   align-items: center;
 }
 
-.chart-placeholder {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.data-item {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.label {
-  color: #666;
-}
-
-.value {
-  font-weight: bold;
-  color: #1890ff;
+.table-container {
+  background: #fafafa;
+  padding: 16px;
+  border-radius: 4px;
+  margin-top: 24px;
 }
 
 /* 移动端适配 */
@@ -144,6 +165,11 @@ const handleDateChange = (date) => {
 
   .chart-container {
     min-width: 100%;
+  }
+
+  .table-container {
+    margin-top: 16px;
+    overflow-x: auto;
   }
 }
 </style>

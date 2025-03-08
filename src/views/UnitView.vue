@@ -1,15 +1,94 @@
 <script setup>
 import { ref } from 'vue';
-import { DatePicker } from 'ant-design-vue';
+import CircleChart from '../components/CircleChart.vue';
+import DataTable from '../components/DataTable.vue';
 
 const selectedDate = ref(null);
 const totalStudents = ref(1234);
 const inSchoolStudents = ref(345);
 const activeStudents = ref(456);
 
+const tableData = ref([
+  {
+    key: '1',
+    unit: '计算机科学与技术学院（人工智能学院）',
+    type: '本科生',
+    total: '1234',
+    inSchool: '345',
+    active: '456',
+    inactive: '111'
+  },
+  {
+    key: '2',
+    unit: '计算机科学与技术学院（人工智能学院）',
+    type: '研究生',
+    total: '567',
+    inSchool: '234',
+    active: '123',
+    inactive: '111'
+  },
+  {
+    key: '3',
+    unit: '机械学院',
+    type: '本科生',
+    total: '890',
+    inSchool: '456',
+    active: '234',
+    inactive: '222'
+  },
+  {
+    key: '4',
+    unit: '机械学院',
+    type: '研究生',
+    total: '345',
+    inSchool: '234',
+    active: '111',
+    inactive: '123'
+  }
+]);
+
+const columns = [
+  {
+    title: '单位',
+    dataIndex: 'unit',
+    key: 'unit',
+  },
+  {
+    title: '类型',
+    dataIndex: 'type',
+    key: 'type',
+  },
+  {
+    title: '总人数',
+    dataIndex: 'total',
+    key: 'total',
+  },
+  {
+    title: '在校人数',
+    dataIndex: 'inSchool',
+    key: 'inSchool',
+  },
+  {
+    title: '活动人数',
+    dataIndex: 'active',
+    key: 'active',
+  },
+  {
+    title: '在校但无活动人数',
+    dataIndex: 'inactive',
+    key: 'inactive',
+  }
+];
+
 const handleDateChange = (date) => {
   selectedDate.value = date;
   // 这里可以添加获取数据的逻辑
+};
+
+const chartData = {
+  total: totalStudents.value,
+  inSchool: inSchoolStudents.value,
+  active: activeStudents.value
 };
 </script>
 
@@ -27,44 +106,16 @@ const handleDateChange = (date) => {
     
     <div class="statistics-container">
       <div class="chart-container">
-        <h3 class="unit-title" :title="'计算机科学与技术学院（人工智能学院）'">计算机科学与技术学院（人工智能学院）</h3>
-        <div class="chart">
-          <div class="chart-placeholder">
-            <div class="data-item">
-              <span class="label" :title="'总人数（含在校和非在校学生）'">总人数（含在校和非在校学生）</span>
-              <span class="value">{{ totalStudents }}</span>
-            </div>
-            <div class="data-item">
-              <span class="label" :title="'实际在校就读的学生人数'">实际在校就读的学生人数</span>
-              <span class="value">{{ inSchoolStudents }}</span>
-            </div>
-            <div class="data-item">
-              <span class="label" :title="'参与校园活动的在校学生人数'">参与校园活动的在校学生人数</span>
-              <span class="value">{{ activeStudents }}</span>
-            </div>
-          </div>
-        </div>
+        <CircleChart chartId="undergraduateChart" :data="chartData" />
       </div>
 
       <div class="chart-container">
-        <h3>机械学院</h3>
-        <div class="chart">
-          <div class="chart-placeholder">
-            <div class="data-item">
-              <span class="label">总人数</span>
-              <span class="value">{{ totalStudents }}</span>
-            </div>
-            <div class="data-item">
-              <span class="label">在校人数</span>
-              <span class="value">{{ inSchoolStudents }}</span>
-            </div>
-            <div class="data-item">
-              <span class="label">在校活动人数</span>
-              <span class="value">{{ activeStudents }}</span>
-            </div>
-          </div>
-        </div>
+        <CircleChart chartId="graduateChart" :data="chartData" title ="研究生" />
       </div>
+    </div>
+
+    <div class="table-container">
+      <DataTable :dataSource="tableData" :columns="columns" />
     </div>
   </div>
 </template>
@@ -88,6 +139,7 @@ const handleDateChange = (date) => {
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
+  margin-bottom: 24px;
 }
 
 .chart-container {
@@ -97,61 +149,23 @@ const handleDateChange = (date) => {
   background: #fafafa;
   border-radius: 4px;
   overflow: hidden;
+  margin-bottom: 24px;
 }
 
-.unit-title {
-  margin: 0;
+/* .unit-title {
+  margin: 0 0 16px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
   cursor: help;
-}
+} */
 
-.chart {
-  margin-top: 16px;
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.chart-placeholder {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.data-item {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  min-width: 0;
-}
-
-.label {
-  color: #666;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: help;
-  flex-shrink: 1;
-  min-width: 0;
-}
-
-.value {
-  font-weight: bold;
-  color: #1890ff;
-  flex-shrink: 0;
-}
-
-.label {
-  color: #666;
-}
-
-.value {
-  font-weight: bold;
-  color: #1890ff;
+.table-container {
+  background: #fafafa;
+  padding: 16px;
+  border-radius: 4px;
+  margin-top: 24px;
 }
 
 /* 移动端适配 */
