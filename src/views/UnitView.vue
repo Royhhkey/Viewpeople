@@ -2,13 +2,21 @@
 import { ref ,onMounted} from 'vue';
 import CircleChart from '../components/CircleChart.vue';
 import DataTable from '../components/DataTable.vue';
+import dayjs from 'dayjs';
 
-import {getdata} from '../api/index.js';
+import {gettable,getstudent} from '../api/index.js';
 
-const selectedDate = ref(null);
-const totalStudents = ref(1234);
-const inSchoolStudents = ref(345);
-const activeStudents = ref(456);
+const selectedDate = ref(dayjs());
+const studentBK = ref({
+  total: 0,
+  inSchool: 0,
+  active: 0
+});
+const studentYJ = ref({
+  total: 0,
+  inSchool: 0,
+  active: 0
+});
 const tableData = ref([
   {
     key: '1',
@@ -70,30 +78,51 @@ const columns = [
 ];
 
 const handleDateChange = (date) => {
-  selectedDate.value = date;
+  if (!date) {
+    selectedDate.value = dayjs();
+    return;
+  } else {
+    selectedDate.value = date;
+  }
   // 这里可以添加获取数据的逻辑
+  Init()
 };
 
-const chartData = {
-  total: totalStudents.value,
-  inSchool: inSchoolStudents.value,
-  active: activeStudents.value
-};
-const test  =async()=>{
-  const {data} = await getdata('2023-06-01');
-  // tableData.value =data.DATA.map((item, index) => ({
-  //     key: (index + 1).toString(),
-  //     unit: item.STU_TYPE,
-  //     total: item.STU_TOTAL,
-  //     inSchool: item.STU_SCHOOL,
-  //     active: item.STU_ACTIVE,
-  //     inactive: item.STU_NEGATIVE
-  // }));
+const InfoTable  =async()=>{
+  const formattedDate = selectedDate.value.format('YYYY-MM-DD');
+  const {data} = await gettable(formattedDate);
+  tableData.value =data.DATA.map((item, index) => ({
+      key: (index + 1).toString(),
+      unit: item.STU_TYPE,
+      total: item.STU_TOTAL,
+      inSchool: item.STU_SCHOOL,
+      active: item.STU_ACTIVE,
+      inactive: item.STU_NEGATIVE
+  }));
 
   console.log(data);
 }
+const InfoStudent = async()=>{
+  const formattedDate = selectedDate.value.format('YYYY-MM-DD');
+  const {data} = await getstudent(formattedDate);
+  studentBK.value = {
+    total: data.BKS.STU_TOTAL,
+    inSchool: data.BKS.STU_SCHOOL,
+    active: data.BKS.STU_ACTIVE
+  };
+  studentYJ.value = {
+    total: data.YJS.STU_TOTAL,
+    inSchool: data.YJS.STU_SCHOOL,
+    active: data.YJS.STU_ACTIVE
+  };
+}
+const Init =()=>{
+  InfoTable();
+  InfoStudent();
+}
 onMounted(()=>{
-  test();
+  Init()
+
 })
 
 
@@ -107,6 +136,8 @@ onMounted(()=>{
         v-model:value="selectedDate"
         @change="handleDateChange"
         placeholder="选择日期查看数据"
+        format="YYYY-MM-DD"
+        :inputReadOnly="true"
         class="date-picker"
       />
     </div>
@@ -114,12 +145,12 @@ onMounted(()=>{
     <div class="statistics-container">
       <div class="chart-wrapper">
 
-        <CircleChart chartId="undergraduateChart" :data="chartData" />
+        <CircleChart chartId="undergraduateChart" :data="studentBK" />
       </div>
 
       <div class="chart-wrapper">
 
-        <CircleChart chartId="graduateChart" :data="chartData" title ="研究生" />
+        <CircleChart chartId="graduateChart" :data="studentYJ" title ="研究生" />
       </div>
     </div>
 

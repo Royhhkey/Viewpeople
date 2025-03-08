@@ -1,11 +1,11 @@
 <script setup>
-import { ref,onMounted } from 'vue';
+import { ref,onMounted ,watchEffect} from 'vue';
 import CircleChart from '../components/CircleChart.vue';
 import DataTable from '../components/DataTable.vue';
+import dayjs from 'dayjs';
+import {gettable} from '../api/index.js';
 
-import {getdata} from '../api/index.js';
-
-const selectedDate = ref(null);
+const selectedDate = ref(dayjs());
 const studentStats = ref({
   total: 1234,
   inSchool: 345,
@@ -61,26 +61,46 @@ const columns = [
     width: '20%'
   }
 ];
+// watchEffect(tableData,() => {
 
-const test  =async()=>{
-  const {data} = await getdata('2023-06-01');
-  // tableData.value =data.DATA.map((item, index) => ({
-  //     key: (index + 1).toString(),
-  //     unit: item.STU_TYPE,
-  //     total: item.STU_TOTAL,
-  //     inSchool: item.STU_SCHOOL,
-  //     active: item.STU_ACTIVE,
-  //     inactive: item.STU_NEGATIVE
-  // }));
+// });
+watchEffect(() => {
+  if (tableData.value && tableData.value.length > 0) {
+    studentStats.value = {
+      total: tableData.value.reduce((sum, item) => sum + Number(item.total), 0),
+      inSchool: tableData.value.reduce((sum, item) => sum + Number(item.inSchool), 0),
+      active: tableData.value.reduce((sum, item) => sum + Number(item.active), 0)
+    };
+  }
+});
+
+const InfoTable  =async()=>{
+  const formattedDate = selectedDate.value.format('YYYY-MM-DD');
+  const {data} = await gettable(formattedDate);
+  tableData.value =data.DATA.map((item, index) => ({
+      key: (index + 1).toString(),
+      unit: item.STU_TYPE,
+      total: item.STU_TOTAL,
+      inSchool: item.STU_SCHOOL,
+      active: item.STU_ACTIVE,
+      inactive: item.STU_NEGATIVE
+  }));
   console.log(data);
 }
 
 const handleDateChange = (date) => {
-  selectedDate.value = date;
+  if (!date) {
+    selectedDate.value = dayjs();
+    return;
+  } else {
+    selectedDate.value = date;
+  }
   // 这里可以添加获取数据的逻辑
+  InfoTable();
+
 };
 onMounted(()=>{
-  test();
+  InfoTable();
 })
 </script>
 
@@ -92,6 +112,8 @@ onMounted(()=>{
         v-model:value="selectedDate"
         @change="handleDateChange"
         placeholder="选择日期查看数据"
+        format="YYYY-MM-DD"
+        :inputReadOnly="true"
         class="date-picker"
       />
     </div>

@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import {getdata} from './api/index.js';
+import {gettable} from './api/index.js';
 import { onMounted } from 'vue';
 const router = useRouter();
 const menuItems = [
@@ -10,9 +10,9 @@ const menuItems = [
   { key: 'teacher', label: '班导师', path: '/teacher' }
 ];
 const test  = async () => {
-  const {data} = await getdata();
+  const {data} = await gettable();
   router.push(menuItems[data.QX_TYPE]);
-  console.log(data);
+  // console.log(data);
 };
 
 onMounted(() => {

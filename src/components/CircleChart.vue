@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, watch } from 'vue';
+import { onMounted, watch, onBeforeUnmount, nextTick } from 'vue';
 import * as echarts from 'echarts';
 
 const props = defineProps({
@@ -22,10 +22,16 @@ const props = defineProps({
     default: '本科生'
   }
 });
-
+let chartInstance = null;
 const initChart = (chartId, data) => {
   const chartDom = document.getElementById(chartId);
-  const myChart = echarts.init(chartDom);
+  if (!chartDom) return;
+
+  if (chartInstance) {
+    chartInstance.dispose();
+  }
+
+  chartInstance = echarts.init(chartDom);
   const option = {
     tooltip: {
       trigger: 'item',
@@ -199,19 +205,38 @@ const initChart = (chartId, data) => {
       }
     ]
   };
-  myChart.setOption(option);
+  chartInstance.setOption(option);
   
-  window.addEventListener('resize', () => {
-    myChart.resize();
-  });
 };
 
+// 组件卸载前清理
+onBeforeUnmount(() => {
+  if (chartInstance) {
+    chartInstance.dispose();
+    chartInstance = null;
+  }
+  // 移除 resize 事件监听
+  window.removeEventListener('resize', handleResize);
+});
+
+const handleResize = () => {
+  if (chartInstance) {
+    chartInstance.resize();
+  }
+};
+
+
 onMounted(() => {
-  initChart(props.chartId, props.data);
+  nextTick(() => {
+    initChart(props.chartId, props.data);
+    window.addEventListener('resize', handleResize);
+  });
 });
 
 watch(() => props.data, (newData) => {
-  initChart(props.chartId, newData);
+  nextTick(() => {
+    initChart(props.chartId, newData);
+  });
 }, { deep: true });
 </script>
 
