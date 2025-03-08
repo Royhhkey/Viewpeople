@@ -105,13 +105,13 @@ const handleDateChange = (date) => {
 /* 移动端适配 */
 @media screen and (max-width: 768px) {
   .view-container {
-    padding: 16px;
+    padding: 3vw;
   }
 
   .header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
+    gap: 2vw;
   }
 
   .date-picker {
@@ -120,6 +120,8 @@ const handleDateChange = (date) => {
 
   .chart-container {
     min-width: 100%;
+    padding: 2vw;
+    margin-bottom: 3vw;
   }
 }
 </style>

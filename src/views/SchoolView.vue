@@ -137,29 +137,30 @@ const chartData = {
 /* 移动端适配 */
 @media screen and (max-width: 768px) {
   .view-container {
-    padding: 16px;
+    padding: 3vw;
   }
 
   .header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
+    gap: 2vw;
   }
 
   .date-picker {
-    /* width: 20vw;
-    min-width:150px ; */
     width: 100%;
   }
 
   .chart-container {
     min-width: 100%;
+    padding: 2vw;
+    margin-bottom: 3vw;
   }
 
   .table-container {
     background: #fafafa;
-    padding: 16px;
+    padding: 2vw;
     border-radius: 4px;
+    margin-top: 2vw;
     margin-top: 24px;
   }
 }

@@ -29,9 +29,23 @@ const props = defineProps({
 
 <style scoped>
 .table-container {
-  /* margin-top: 24px; */
+  width: 100%;
   background: #fff;
   border-radius: 4px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+:deep(.ant-table) {
+  background: #fff;
+}
+
+:deep(.ant-table-container) {
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+:deep(.ant-table-content) {
+  overflow-x: auto;
 }
 </style>
