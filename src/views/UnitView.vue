@@ -1,53 +1,38 @@
 <script setup>
-import { ref,onMounted } from 'vue';
+import { ref ,onMounted} from 'vue';
 import CircleChart from '../components/CircleChart.vue';
 import DataTable from '../components/DataTable.vue';
+
 import {getdata} from '../api/index.js';
 
 const selectedDate = ref(null);
 const totalStudents = ref(1234);
 const inSchoolStudents = ref(345);
 const activeStudents = ref(456);
-
-
-
-
 const tableData = ref([
   {
     key: '1',
-    unit: '计算机科学与技术学院（人工智能学院）',
-    type: '本科生',
+    unit: '电信',
     total: '1234',
-    inSchool: '345',
-    active: '456',
-    inactive: '111'
+    inSchool: '123',
+    active: '123',
+    inactive: '123'
   },
   {
     key: '2',
-    unit: '计算机科学与技术学院（人工智能学院）',
-    type: '研究生',
-    total: '567',
-    inSchool: '234',
-    active: '123',
-    inactive: '111'
+    unit: '文传',
+    total: '12345',
+    inSchool: '123',
+    active: '',
+    inactive: ''
   },
   {
     key: '3',
-    unit: '机械学院',
-    type: '本科生',
-    total: '890',
-    inSchool: '456',
-    active: '234',
-    inactive: '222'
-  },
-  {
-    key: '4',
-    unit: '机械学院',
-    type: '研究生',
-    total: '345',
-    inSchool: '234',
-    active: '111',
-    inactive: '123'
+    unit: '电子信息工程学院',
+    total: '12345',
+    inSchool: '123',
+    active: '',
+    inactive: ''
   }
 ]);
 
@@ -56,35 +41,33 @@ const columns = [
     title: '单位',
     dataIndex: 'unit',
     key: 'unit',
-  },
-  {
-    title: '类型',
-    dataIndex: 'type',
-    key: 'type',
+    width: '20vw',
   },
   {
     title: '总人数',
     dataIndex: 'total',
     key: 'total',
+    width: '10vw'
   },
   {
     title: '在校人数',
     dataIndex: 'inSchool',
     key: 'inSchool',
+    width: '10vw'
   },
   {
     title: '活动人数',
     dataIndex: 'active',
     key: 'active',
+    width: '10vw'
   },
   {
     title: '在校但无活动人数',
     dataIndex: 'inactive',
     key: 'inactive',
+    width: '10vw'
   }
 ];
-
-
 
 const handleDateChange = (date) => {
   selectedDate.value = date;
@@ -96,24 +79,24 @@ const chartData = {
   inSchool: inSchoolStudents.value,
   active: activeStudents.value
 };
-
 const test  =async()=>{
   const {data} = await getdata('2023-06-01');
-  tableData.value =data.DATA.map((item, index) => ({
-      key: (index + 1).toString(),
-      unit: item.STU_TYPE,
-      total: item.STU_TOTAL,
-      inSchool: item.STU_SCHOOL,
-      active: item.STU_ACTIVE,
-      inactive: item.STU_NEGATIVE
-  }));
+  // tableData.value =data.DATA.map((item, index) => ({
+  //     key: (index + 1).toString(),
+  //     unit: item.STU_TYPE,
+  //     total: item.STU_TOTAL,
+  //     inSchool: item.STU_SCHOOL,
+  //     active: item.STU_ACTIVE,
+  //     inactive: item.STU_NEGATIVE
+  // }));
 
   console.log(data);
 }
-
 onMounted(()=>{
   test();
 })
+
+
 </script>
 
 <template>
@@ -129,11 +112,13 @@ onMounted(()=>{
     </div>
     
     <div class="statistics-container">
-      <div class="chart-container">
+      <div class="chart-wrapper">
+
         <CircleChart chartId="undergraduateChart" :data="chartData" />
       </div>
 
-      <div class="chart-container">
+      <div class="chart-wrapper">
+
         <CircleChart chartId="graduateChart" :data="chartData" title ="研究生" />
       </div>
     </div>
@@ -163,40 +148,22 @@ onMounted(()=>{
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
-  margin-bottom: 24px;
 }
 
-.chart-container {
+.chart-wrapper {
   flex: 1;
   min-width: 300px;
   padding: 16px;
   background: #fafafa;
   border-radius: 4px;
-  overflow: hidden;
   margin-bottom: 24px;
-}
-
-/* .unit-title {
-  margin: 0 0 16px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  cursor: help;
-} */
-
-.table-container {
-  background: #fafafa;
-  padding: 16px;
-  border-radius: 4px;
-  margin-top: 24px;
 }
 
 /* 移动端适配 */
 @media screen and (max-width: 768px) {
-  /* .view-container {
+  .view-container {
     padding: 3vw;
-  } */
+  }
 
   .header {
     flex-direction: column;
@@ -215,7 +182,12 @@ onMounted(()=>{
   }
 
   .table-container {
+    /* background: #fafafa; */
+    padding: 0px;
+    /* border-radius: 4px; */
+    /* margin-top: 24px; */
     overflow-x: auto;
+    white-space: nowrap;
   }
 }
 </style>

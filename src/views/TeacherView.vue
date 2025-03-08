@@ -11,14 +11,25 @@ const studentStats = ref({
   inSchool: 345,
   active: 456
 });
-const tableData = ref([]);
-const columns = [
+const tableData = ref([
   {
-    title: '序号',
-    dataIndex: 'key',
-    key: 'key',
-    width: '10%'
+    key: '1',
+    unit: '电信qwewqeqwewqeeqwew',
+    total: '12340000000',
+    inSchool: '12300000000',
+    active: '1230000000',
+    inactive: '1230000000'
   },
+  {
+    key: '2',
+    unit: '联通qweXXXXXXXXXXXXXXXXXXXXXXXX',
+    total: '456000',
+    inSchool: '45',
+    active: '45',
+    inactive: '45'
+  },
+]);
+const columns = [
   {
     title: '单位',
     dataIndex: 'unit',
@@ -38,29 +49,29 @@ const columns = [
     width: '10%'
   },
   {
-    title: '活跃人数',
+    title: '活动人数',
     dataIndex: 'active',
     key: 'active',
     width: '10%'
   },
   {
-    title: '非活跃人数',
+    title: '在校但无活动人数',
     dataIndex: 'inactive',
     key: 'inactive',
-    width: '10%'
+    width: '20%'
   }
 ];
 
 const test  =async()=>{
   const {data} = await getdata('2023-06-01');
-  tableData.value =data.DATA.map((item, index) => ({
-      key: (index + 1).toString(),
-      unit: item.STU_TYPE,
-      total: item.STU_TOTAL,
-      inSchool: item.STU_SCHOOL,
-      active: item.STU_ACTIVE,
-      inactive: item.STU_NEGATIVE
-  }));
+  // tableData.value =data.DATA.map((item, index) => ({
+  //     key: (index + 1).toString(),
+  //     unit: item.STU_TYPE,
+  //     total: item.STU_TOTAL,
+  //     inSchool: item.STU_SCHOOL,
+  //     active: item.STU_ACTIVE,
+  //     inactive: item.STU_NEGATIVE
+  // }));
   console.log(data);
 }
 
@@ -127,40 +138,12 @@ onMounted(()=>{
   margin-bottom: 24px;
 }
 
-.chart {
-  margin-top: 16px;
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.table-container {
+  background: #fafafa;
+  padding: 16px;
+  border-radius: 4px;
+  margin-top: 24px;
 }
-
-.chart-placeholder {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.data-item {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.label {
-  color: #666;
-}
-
-.value {
-  font-weight: bold;
-  color: #1890ff;
-}
-
-
 
 /* 移动端适配 */
 @media screen and (max-width: 768px) {
@@ -183,8 +166,12 @@ onMounted(()=>{
     padding: 2vw;
     margin-bottom: 3vw;
   }
+
   .table-container {
+    padding: 0px;
+    margin-top: 3vw;
+    white-space: nowrap;
     overflow-x: auto;
-}
+  }
 }
 </style>

@@ -41,26 +41,31 @@ const columns = [
     title: '单位',
     dataIndex: 'unit',
     key: 'unit',
+    width: '20%'
   },
   {
     title: '总人数',
     dataIndex: 'total',
     key: 'total',
+    width: '10%'
   },
   {
     title: '在校人数',
     dataIndex: 'inSchool',
     key: 'inSchool',
+    width: '10%'
   },
   {
     title: '活动人数',
     dataIndex: 'active',
     key: 'active',
+    width: '10%'
   },
   {
     title: '在校但无活动人数',
     dataIndex: 'inactive',
     key: 'inactive',
+    width: '10%'
   }
 ];
 
@@ -76,14 +81,14 @@ const chartData = {
 };
 const test  =async()=>{
   const {data} = await getdata('2023-06-01');
-  tableData.value =data.DATA.map((item, index) => ({
-      key: (index + 1).toString(),
-      unit: item.STU_TYPE,
-      total: item.STU_TOTAL,
-      inSchool: item.STU_SCHOOL,
-      active: item.STU_ACTIVE,
-      inactive: item.STU_NEGATIVE
-  }));
+  // tableData.value =data.DATA.map((item, index) => ({
+  //     key: (index + 1).toString(),
+  //     unit: item.STU_TYPE,
+  //     total: item.STU_TOTAL,
+  //     inSchool: item.STU_SCHOOL,
+  //     active: item.STU_ACTIVE,
+  //     inactive: item.STU_NEGATIVE
+  // }));
 
   console.log(data);
 }
@@ -154,6 +159,14 @@ onMounted(()=>{
   margin-bottom: 24px;
 }
 
+.table-container {
+  background: #fafafa;
+  padding: 16px;
+  border-radius: 4px;
+  margin-top: 24px;
+  overflow-x: auto;
+}
+
 /* 移动端适配 */
 @media screen and (max-width: 768px) {
   .view-container {
@@ -170,18 +183,15 @@ onMounted(()=>{
     width: 100%;
   }
 
-  .chart-container {
+  .chart-wrapper {
     min-width: 100%;
     padding: 2vw;
     margin-bottom: 3vw;
   }
 
   .table-container {
-    background: #fafafa;
-    padding: 2vw;
-    border-radius: 4px;
-    margin-top: 2vw;
-    /* margin-top: 24px; */
+    padding: 0px;
+    margin-top: 3vw;
   }
 }
 </style>
