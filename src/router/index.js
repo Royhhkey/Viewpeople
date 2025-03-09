@@ -28,6 +28,12 @@ const routes = [
     name: 'Teacher',
     component: () => import('../views/TeacherView.vue'),
     meta: { title: '班导师数据' }
+  },
+  {
+    path:'/detail',
+    name: 'Detail',
+    component: () => import('../views/DetailView.vue'),
+    meta: { title: '详情' }
   }
 ]
 

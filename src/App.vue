@@ -1,8 +1,11 @@
 <script setup>
-import { useRouter } from 'vue-router';
+import { useRouter ,useRoute} from 'vue-router';
 import {gettable} from './api/index.js';
-import { onMounted } from 'vue';
+import { onMounted ,computed} from 'vue';
 const router = useRouter();
+const route = useRoute();
+
+const showHeader = computed(() => route.name !== 'Detail');
 const menuItems = [
   { key: 'school', label: '校级', path: '/school' },
   { key: 'unit', label: '单位', path: '/unit' },
@@ -25,7 +28,7 @@ const handleTabChange = (key) => {
 
 <template>
   <a-layout class="layout">
-    <a-layout-header>
+    <a-layout-header v-show="showHeader">
       <div class="header-content" >
         <h2 class="system-title" >学生在校人数统计</h2>
         <a-tabs

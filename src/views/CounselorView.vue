@@ -4,7 +4,8 @@ import CircleChart from '../components/CircleChart.vue';
 import DataTable from '../components/DataTable.vue';
 import dayjs from 'dayjs';
 import {gettable} from '../api/index.js';
-
+import {useRouter } from 'vue-router';
+const router = useRouter();
 const selectedDate = ref(dayjs());
 const studentStats = ref({
   total: 1234,
@@ -61,6 +62,15 @@ const columns = [
     width: '20%'
   }
 ];
+const  handleCellClick = (record) => {
+  router.push({ 
+    path: '/detail' ,
+    query: { 
+      unit: record.unit,
+      date: selectedDate.value.format('YYYY-MM-DD')
+     }
+  });
+};
 // watchEffect(tableData,() => {
 
 // });
@@ -73,7 +83,6 @@ watchEffect(() => {
     };
   }
 });
-
 const InfoTable  =async()=>{
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
   const {data} = await gettable(formattedDate);
@@ -125,7 +134,7 @@ onMounted(()=>{
 
     </div>
     <div class="table-container">
-      <DataTable :dataSource="tableData" :columns="columns" />
+      <DataTable :dataSource="tableData" :columns="columns"  @cell-click="handleCellClick"/>
     </div>
   </div>
 </template>

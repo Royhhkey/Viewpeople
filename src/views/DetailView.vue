@@ -1,0 +1,127 @@
+<template>
+    <div class="detail-container">
+      <h1 class="page-title">无活动记录在校学生</h1>
+      <div class="sub-header">
+        <div class="date">{{ selectedDate }}</div>
+        <div class="unit">{{ unit }}</div>
+      </div>
+      <div class="table-container">
+
+       <DataTable :dataSource="tableData" :columns="columns"  @cell-click="handleCellClick"/>
+
+      </div>
+    </div>
+  </template>
+  
+  <script setup>
+  import { useRoute } from 'vue-router';
+  import { ref, onMounted } from 'vue';
+  import DataTable from '../components/DataTable.vue';
+
+  
+  const route = useRoute();
+  const unit = ref(route.query.unit || '');
+  const selectedDate = ref(route.query.date || '');
+  
+  const columns = [
+    {
+      title: '姓名',
+      dataIndex: 'name',
+      key: 'name',
+      width: '33%'
+    },
+    {
+      title: '学号',
+      dataIndex: 'studentId',
+      key: 'studentId',
+      width: '33%'
+    },
+    {
+      title: '性别',
+      dataIndex: 'gender',
+      key: 'gender',
+      width: '33%'
+    }
+  ];
+  
+  const tableData = ref([
+    {
+      key: '1',
+      name: '张三',
+      studentId: '1234xxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      gender: '123'
+    },
+    {
+      key: '2',
+      name: '李四',
+      studentId: '12345',
+      gender: '123'
+    }
+  ]);
+  
+  onMounted(() => {
+    // 这里可以添加获取详细数据的逻辑
+    console.log(unit.value);
+  });
+  </script>
+  
+  <style scoped>
+  .detail-container {
+    padding: 24px;
+    background: #fff;
+    min-height: 100vh;
+  }
+  
+  .page-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .sub-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .date, .unit {
+    font-size: 16px;
+    margin: 8px 0;
+    color: #666;
+  }
+  
+  .table-container {
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+  }
+  
+  :deep(.ant-table-thead > tr > th) {
+    background: #fafafa;
+    text-align: center;
+  }
+  
+  :deep(.ant-table-tbody > tr > td) {
+    text-align: center;
+  }
+  
+  /* 移动端适配 */
+  @media screen and (max-width: 768px) {
+    .detail-container {
+      padding: 0px;
+    }
+  
+    .page-title {
+      font-size: 20px;
+    }
+  
+    .date, .unit {
+      font-size: 14px;
+    }
+    .table-container {
+    padding: 0px;
+    /* margin-top: 3vw; */
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  }
+  </style>
