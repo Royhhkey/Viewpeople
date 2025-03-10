@@ -20,3 +20,13 @@ export const getstudent = (date) => {
         }
     })
 }
+export const getinactivestudent = (date,type) => {
+    return request({
+        url: '/2025/03/06/getdetail',
+        method: 'post',
+        data:{
+            date:date,
+            type:type
+        }
+    })
+}

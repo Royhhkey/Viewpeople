@@ -29,7 +29,7 @@ const handleCellClick = (record, column) => {
 
 <template>
   <div class="table-container">
-    <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :scroll="{ x: 15 }">
+    <a-table :dataSource="dataSource" :columns="columns" :pagination="false" >
       <template #headerCell="{ column }">
         <template v-if="column.key === 'unit'">
           单位

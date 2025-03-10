@@ -85,7 +85,6 @@ const handleDateChange = (date) => {
     selectedDate.value = date;
   }
   // console.log("date",date);
-  // selectedDate.value = date;
   // 这里可以添加获取数据的逻辑
   Init()
 };

@@ -17,6 +17,7 @@
   import { useRoute } from 'vue-router';
   import { ref, onMounted } from 'vue';
   import DataTable from '../components/DataTable.vue';
+  import { getinactivestudent } from '../api/index';
 
   
   const route = useRoute();
@@ -58,10 +59,24 @@
       gender: '123'
     }
   ]);
+  const getdata  = async () => {
+    const {data} = await getinactivestudent(selectedDate.value,unit.value);
+    console.log(data);
+    tableData.value =data.DATA.map((item, index) => ({
+      key: item.ROWNUM,
+      name: item.XM,
+      studentId: item.XH,
+      gender: item.XB
+  }));
+
+
+  }
   
   onMounted(() => {
     // 这里可以添加获取详细数据的逻辑
     console.log(unit.value);
+    console.log(selectedDate.value);
+    getdata();
   });
   </script>
   
