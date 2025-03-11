@@ -1,21 +1,48 @@
 <script setup>
 import { useRouter ,useRoute} from 'vue-router';
-import {gettable} from './api/index.js';
-import { onMounted ,computed} from 'vue';
+import { getqx } from './api';
+import { useAuthStore } from './store';
+
+import { onMounted ,computed ,ref} from 'vue';
 const router = useRouter();
 const route = useRoute();
+const authStore = useAuthStore();
 
 const showHeader = computed(() => route.name !== 'Detail');
+// const menuItems = [
+//   { key: 'school', label: '校级', path: '/school' },
+//   { key: 'unit', label: '单位', path: '/unit' },
+//   { key: 'counselor', label: '辅导员', path: '/counselor' },
+//   { key: 'teacher', label: '班导师', path: '/teacher' }
+// ];
 const menuItems = [
-  { key: 'school', label: '校级', path: '/school' },
-  { key: 'unit', label: '单位', path: '/unit' },
-  { key: 'counselor', label: '辅导员', path: '/counselor' },
-  { key: 'teacher', label: '班导师', path: '/teacher' }
+  { key: 'school', label: '校级', path: '/school', auth: ['0', '4'] },
+  { key: 'unit', label: '单位', path: '/unit', auth: ['1'] },
+  { key: 'counselor', label: '辅导员', path: '/counselor', auth: ['2', '3'] },
+  { key: 'teacher', label: '班导师', path: '/teacher', auth: ['5'] }
 ];
-const test  = async () => {
-  const {data} = await gettable();
-  router.push(menuItems[data.QX_TYPE]);
-  // console.log(data);
+const visibleMenuItems = ref(menuItems);
+
+const test = async () => {
+  const { data } = await getqx();
+  if (data && data.DATA) {
+    const userAuth = Array.isArray(data.DATA) ? 
+       data.DATA.map(item => item.QX) : 
+       [data.DATA.QX];
+    authStore.setUserAuth(userAuth);  // 存储到 pinia
+    // const userAuth = data.DATA.map(item => item.QX);
+    // 过滤出用户有权限看到的菜单项
+    const filteredMenus = menuItems.filter(item => 
+      item.auth.some(auth => userAuth.includes(auth))
+    );
+    visibleMenuItems.value = filteredMenus;
+    
+    // 如果有权限的菜单不为空，自动跳转到第一个有权限的页面
+    if (filteredMenus.length > 0 && route.path === '/') {
+      router.push(filteredMenus[0].path);
+    }
+  }
+  console.log(data);
 };
 
 onMounted(() => {
@@ -37,7 +64,7 @@ const handleTabChange = (key) => {
           class="nav-tabs"
         >
           <a-tab-pane
-            v-for="item in menuItems"
+            v-for="item in visibleMenuItems"
             :key="item.key"
             :tab="item.label"
           />
@@ -79,6 +106,15 @@ const handleTabChange = (key) => {
 .nav-tabs {
   min-width: 400px;
 }
+:deep(.ant-tabs-nav) {
+  width: 100%;
+}
+
+:deep(.ant-tabs-nav-list) {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
 
 :deep(.ant-tabs) {
   color: rgba(0, 0, 0, 0.85);
@@ -112,6 +148,7 @@ const handleTabChange = (key) => {
   .header-content {
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
     padding: 12px 16px;
   }
 

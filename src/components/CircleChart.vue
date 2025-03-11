@@ -33,6 +33,7 @@ const initChart = (chartId, data) => {
 
   chartInstance = echarts.init(chartDom);
   const option = {
+
     tooltip: {
       trigger: 'item',
       formatter: '{b}: {c} 人',
@@ -47,13 +48,17 @@ const initChart = (chartId, data) => {
       orient: 'horizontal',
       left: '0%',
       top: '0%',
-      itemWidth: 10,
-      itemHeight: 10,
+      itemWidth: 8,
+      itemHeight: 8,
       textStyle: {
         color: '#666',
-        fontSize: 12
+        fontSize: 10
       },
-      itemGap: 16
+      itemGap: 10,
+      formatter: function(name) {
+        const dataItem = option.series.find(s => s.data[0].name === name)?.data[0];
+        return `${name}: ${dataItem?.value || 0}人`;
+      }
     },
     series: [
       {
@@ -159,9 +164,8 @@ const initChart = (chartId, data) => {
         type: 'pie',
         radius: ['45%', '50%'],
         label: {
-          show: true,
-          position: 'center',
-          formatter: '{b}\n{c} 人'
+          show: false,
+          position: 'center'
         },
         emphasis: {
           scale: true,
@@ -252,65 +256,29 @@ watch(() => props.data, (newData) => {
 <style scoped>
 .chart-container {
   flex: 1;
-  min-width: 150px;
-  max-width: calc(50% - 8px);
+  min-width: 180px;
   padding: 12px;
   background: #fafafa;
   border-radius: 4px;
-  margin: 4px;
 }
-
 .chart-title {
-  margin: 0 0 12px;
+  margin: 0 0 8px;
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   color: #333;
 }
+
 .chart {
-  margin-top: 12px;
-  height: 200px;
+  height: 250px;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.chart-placeholder {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.data-stats {
-  margin-top: 16px;
+/* .chart-placeholder {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 16px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-
-
-.value-wrapper {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-}
-
-.value {
-  font-size: 20px;
-  font-weight: 600;
-  color: #1890ff;
-}
-
-.unit {
-  font-size: 12px;
-  color: #999;
-}
-.value {
-  font-weight: bold;
-  color: #1890ff;
-}
+} */
 </style>

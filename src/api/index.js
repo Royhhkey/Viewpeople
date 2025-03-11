@@ -1,22 +1,24 @@
 import request from "../utils/request";
 
 
-export const gettable = (date) => {
+export const gettable = (date ,qx) => {
     return request({
         url: '/2025/03/06/get',
         method: 'post',
         data:{
-            date:date
+            date:date,
+            qx:qx
         }
     })
 }
 
-export const getstudent = (date) => {
+export const getstudent = (date,qx) => {
     return request({
         url: '/2025/03/06/gettotal',
         method: 'post',
         data:{
-            date:date
+            date:date,
+            qx:qx
         }
     })
 }
@@ -28,5 +30,12 @@ export const getinactivestudent = (date,type) => {
             date:date,
             type:type
         }
+    })
+}
+
+export const getqx =   ()=>{
+    return request({
+        url: '/2025/03/06/getqx',
+        method: 'post',
     })
 }

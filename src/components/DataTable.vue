@@ -74,7 +74,7 @@ const handleCellClick = (record, column) => {
 }
 
 :deep(.ant-table-thead > tr > th) {
-  font-size: 10px;
+  font-size: 2.34vw;
   padding: 12px;
   white-space: normal;
   word-break: break-all;

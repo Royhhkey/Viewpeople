@@ -13,22 +13,22 @@ const studentStats = ref({
   active: 456
 });
 const tableData = ref([
-  {
-    key: '1',
-    unit: '电信qww',
-    total: '12340000000',
-    inSchool: '12300000000',
-    active: '1230000000',
-    inactive: '1230000000'
-  },
-  {
-    key: '2',
-    unit: '联通XXXXXxxxxxxxxxxxxxxxdsfsdfsdfsdfsefsdfdssdfsdfsfsd',
-    total: '456000',
-    inSchool: '45',
-    active: '45',
-    inactive: '45'
-  },
+  // {
+  //   key: '1',
+  //   unit: '电信qww',
+  //   total: '12340000000',
+  //   inSchool: '12300000000',
+  //   active: '1230000000',
+  //   inactive: '1230000000'
+  // },
+  // {
+  //   key: '2',
+  //   unit: '联通XXXXXxxxxxxxxxxxxxxxdsfsdfsdfsdfsefsdfdssdfsdfsfsd',
+  //   total: '456000',
+  //   inSchool: '45',
+  //   active: '45',
+  //   inactive: '45'
+  // },
 ]);
 const columns = [
   {
@@ -73,14 +73,15 @@ watchEffect(() => {
 });
 const InfoTable  =async()=>{
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  const {data} = await gettable(formattedDate);
+  const {data} = await gettable(formattedDate,'6');
+  console.log(data);
   tableData.value =data.DATA.map((item, index) => ({
       key: (index + 1).toString(),
-      unit: item.STU_TYPE,
-      total: item.STU_TOTAL,
-      inSchool: item.STU_SCHOOL,
-      active: item.STU_ACTIVE,
-      inactive: item.STU_NEGATIVE
+      unit: item.DWMC,
+      total: item.ZRS,
+      inSchool: item.ZXRS,
+      active: item.ZXHDRS,
+      inactive: item.WHDRS
   }));
   console.log(data);
 }

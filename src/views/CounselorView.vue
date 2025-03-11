@@ -13,53 +13,53 @@ const studentStats = ref({
   active: 456
 });
 const tableData = ref([
-  {
-    key: '1',
-    unit: '电信qwewqeqwewqeeqwew',
-    total: '12340000000',
-    inSchool: '12300000000',
-    active: '1230000000',
-    inactive: '1230000000'
-  },
-  {
-    key: '2',
-    unit: '联通qweXXXXXXXXXXXXXXXXXXXXXXXX',
-    total: '456000',
-    inSchool: '45',
-    active: '45',
-    inactive: '45'
-  },
+  // {
+  //   key: '1',
+  //   unit: '电信qwewqeqwewqeeqwew',
+  //   total: '12340000000',
+  //   inSchool: '12300000000',
+  //   active: '1230000000',
+  //   inactive: '1230000000'
+  // },
+  // {
+  //   key: '2',
+  //   unit: '联通qweXXXXXXXXXXXXXXXXXXXXXXXX',
+  //   total: '456000',
+  //   inSchool: '45',
+  //   active: '45',
+  //   inactive: '45'
+  // },
 ]);
 const columns = [
   {
     title: '单位',
     dataIndex: 'unit',
     key: 'unit',
-    width: '20vw'
+    width: '20%'
   },
   {
     title: '总人数',
     dataIndex: 'total',
     key: 'total',
-    width: '10vw'
+    width: '10%'
   },
   {
     title: '在校人数',
     dataIndex: 'inSchool',
     key: 'inSchool',
-    width: '10vw'
+    width: '10%'
   },
   {
     title: '活动人数',
     dataIndex: 'active',
     key: 'active',
-    width: '10vw'
+    width: '10%'
   },
   {
     title: '在校但无活动人数',
     dataIndex: 'inactive',
     key: 'inactive',
-    width: '20vw'
+    width: '20%'
   }
 ];
 const  handleCellClick = (record) => {
@@ -168,7 +168,7 @@ onMounted(()=>{
   min-width: 300px;
   padding: 16px;
   /* #fafafa */
-  background: #238258; 
+  background: #fafafa; 
   border-radius: 4px;
   margin-bottom: 24px;
 }

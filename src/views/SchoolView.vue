@@ -8,7 +8,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const selectedDate = ref(dayjs());
 const studentBK = ref({
-  total: 0,
+  total: 10,
   inSchool: 0,
   active: 0
 });
@@ -92,7 +92,8 @@ const handleDateChange = (date) => {
 
 const InfoTable  =async()=>{
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  const {data} = await gettable(formattedDate);
+  const {data} = await gettable(formattedDate,'0');
+  console.log(data);
   tableData.value =data.DATA.map((item, index) => ({
       key: (index + 1).toString(),
       unit: item.STU_TYPE,
@@ -106,7 +107,7 @@ const InfoTable  =async()=>{
 }
 const InfoStudent  =async()=>{
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  const {data} = await getstudent(formattedDate);
+  const {data} = await getstudent(formattedDate,'0');
   studentBK.value = {
     total: data.BKS.STU_TOTAL,
     inSchool: data.BKS.STU_SCHOOL,
@@ -135,7 +136,7 @@ const Init =()=>{
   InfoStudent();
 }
 onMounted(()=>{
-  Init()
+  // Init()
 
 })
 
@@ -195,6 +196,7 @@ onMounted(()=>{
   display: flex;
   gap: 24px;
   flex-wrap: nowrap;
+  margin-top: 24px;
 }
 
 .chart-wrapper {
