@@ -180,6 +180,8 @@ onMounted(()=>{
   background: #fff;
   border-radius: 4px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  min-height: 100vh;
+
 }
 
 .header {
@@ -192,27 +194,19 @@ onMounted(()=>{
 .statistics-container {
   display: flex;
   gap: 24px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .chart-wrapper {
   flex: 1;
-  min-width: 300px;
+  min-width: 150px;
+  max-width: calc(50% - 12px);
   padding: 16px;
   background: #fafafa;
   border-radius: 4px;
   margin-bottom: 24px;
 }
 
-/* .table-container {
-  background: #fafafa;
-  padding: 16px;
-  border-radius: 4px;
-  margin-top: 24px;
-  overflow-x: auto;
-} */
-
-/* 移动端适配 */
 @media screen and (max-width: 768px) {
   .view-container {
     padding: 3vw;
@@ -228,17 +222,13 @@ onMounted(()=>{
     width: 100%;
   }
 
-  .chart-wrapper {
-    min-width: 100%;
-    padding: 2vw;
-    margin-bottom: 3vw;
+  .statistics-container {
+    gap: 8px;
   }
 
-  .table-container {
-    padding: 0px;
-    /* margin-top: 3vw; */
-    overflow-x: auto;
-    white-space: nowrap;
+  .chart-wrapper {
+    padding: 8px;
+    margin-bottom: 16px;
   }
 }
 </style>

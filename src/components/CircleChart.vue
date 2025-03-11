@@ -159,8 +159,9 @@ const initChart = (chartId, data) => {
         type: 'pie',
         radius: ['45%', '50%'],
         label: {
-          show: false,
-          position: 'center'
+          show: true,
+          position: 'center',
+          formatter: '{b}\n{c} 人'
         },
         emphasis: {
           scale: true,
@@ -244,65 +245,30 @@ watch(() => props.data, (newData) => {
   <div class="chart-container">
     <h3 v-if="title" class="chart-title">{{ title }}</h3>
     <div :id="chartId" class="chart"></div>
-    <div class="data-stats">
-      <div class="data-item">
-        <span class="label">总人数</span>
-        <div class="value-wrapper">
-          <span class="value">{{ data.total }}</span>
-          <span class="unit">人</span>
-        </div>
-      </div>
-      <div class="data-item">
-        <span class="label">在校人数</span>
-        <div class="value-wrapper">
-          <span class="value">{{ data.inSchool }}</span>
-          <span class="unit">人</span>
-        </div>
-      </div>
-      <div class="data-item">
-        <span class="label">在校活动人数</span>
-        <div class="value-wrapper">
-          <span class="value">{{ data.active }}</span>
-          <span class="unit">人</span>
-        </div>
-      </div>
-    </div>
   </div>
 
 </template>
 
 <style scoped>
 .chart-container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  flex: 1;
+  min-width: 150px;
+  max-width: calc(50% - 8px);
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 4px;
+  margin: 4px;
 }
 
 .chart-title {
-  margin: 0 0 16px;
+  margin: 0 0 12px;
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
   color: #333;
 }
-
 .chart {
-  flex: 1;
-  min-height: 300px;
-}
-</style>
-<style scoped>
-.chart-container {
-  flex: 1;
-  min-width: 300px;
-  padding: 16px;
-  background: #fafafa;
-  border-radius: 4px;
-}
-
-.chart {
-  margin-top: 16px;
-  height: 250px;
+  margin-top: 12px;
+  height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -325,23 +291,7 @@ watch(() => props.data, (newData) => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.data-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 12px;
-  transition: all 0.3s ease;
-  border-radius: 4px;
-}
 
-.data-item:hover {
-  background: rgba(24, 144, 255, 0.05);
-}
-
-.label {
-  font-size: 14px;
-  color: #666;
-}
 
 .value-wrapper {
   display: flex;

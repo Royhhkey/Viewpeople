@@ -1,5 +1,5 @@
 <script setup>
-import { ref,onMounted,watchEffect } from 'vue';
+import { ref,onMounted ,watchEffect} from 'vue';
 import CircleChart from '../components/CircleChart.vue';
 import DataTable from '../components/DataTable.vue';
 import dayjs from 'dayjs';
@@ -15,7 +15,7 @@ const studentStats = ref({
 const tableData = ref([
   {
     key: '1',
-    unit: '电信qww',
+    unit: '电信qwewqeqwewqeeqwew',
     total: '12340000000',
     inSchool: '12300000000',
     active: '1230000000',
@@ -23,7 +23,7 @@ const tableData = ref([
   },
   {
     key: '2',
-    unit: '联通XXXXXxxxxxxxxxxxxxxxdsfsdfsdfsdfsefsdfdssdfsdfsfsd',
+    unit: '联通qweXXXXXXXXXXXXXXXXXXXXXXXX',
     total: '456000',
     inSchool: '45',
     active: '45',
@@ -62,6 +62,18 @@ const columns = [
     width: '20vw'
   }
 ];
+const  handleCellClick = (record) => {
+  router.push({ 
+    path: '/detail' ,
+    query: { 
+      unit: record.unit,
+      date: selectedDate.value.format('YYYY-MM-DD')
+     }
+  });
+};
+// watchEffect(tableData,() => {
+
+// });
 watchEffect(() => {
   if (tableData.value && tableData.value.length > 0) {
     studentStats.value = {
@@ -94,16 +106,7 @@ const handleDateChange = (date) => {
   }
   // 这里可以添加获取数据的逻辑
   InfoTable();
-};
-const  handleCellClick = (record) => {
-  router.push({ 
-    path: '/detail' ,
-    query: { 
-      unit: record.unit,
-      date: selectedDate.value.format('YYYY-MM-DD')
-     }
-  });
-  // 处理单元格点击事件
+
 };
 onMounted(()=>{
   InfoTable();
@@ -113,7 +116,7 @@ onMounted(()=>{
 <template>
   <div class="view-container">
     <div class="header">
-      <h2>班导师数据统计</h2>
+      <h2>辅导员数据统计</h2>
       <a-date-picker
         v-model:value="selectedDate"
         @change="handleDateChange"
@@ -131,7 +134,7 @@ onMounted(()=>{
 
     </div>
     <div class="table-container">
-      <DataTable :dataSource="tableData" :columns="columns" @cell-click="handleCellClick" />
+      <DataTable :dataSource="tableData" :columns="columns"  @cell-click="handleCellClick"/>
     </div>
   </div>
 </template>
@@ -143,7 +146,6 @@ onMounted(()=>{
   border-radius: 4px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   min-height: 100vh;
-
 }
 
 .header {
@@ -173,6 +175,7 @@ onMounted(()=>{
   padding: 16px;
   border-radius: 4px;
   margin-top: 24px;
+  overflow-x: auto;
 } */
 
 /* 移动端适配 */
@@ -191,17 +194,16 @@ onMounted(()=>{
     width: 100%;
   }
 
-  .chart-container {
+  /* .chart-container {
     min-width: 100%;
     padding: 2vw;
     margin-bottom: 3vw;
-  }
+  } */
 
   /* .table-container {
     padding: 0px;
     margin-top: 3vw;
     white-space: nowrap;
-    overflow-x: auto;
   } */
 }
 </style>

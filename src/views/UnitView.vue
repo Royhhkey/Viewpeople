@@ -177,6 +177,8 @@ onMounted(()=>{
   background: #fff;
   border-radius: 4px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  min-height: 100vh;
+
 }
 
 .header {
@@ -196,7 +198,8 @@ onMounted(()=>{
   flex: 1;
   min-width: 300px;
   padding: 16px;
-  background: #fafafa;
+  /* #fafafa */
+  background: #238258; 
   border-radius: 4px;
   margin-bottom: 24px;
 }
@@ -217,19 +220,5 @@ onMounted(()=>{
     width: 100%;
   }
 
-  .chart-container {
-    min-width: 100%;
-    padding: 2vw;
-    margin-bottom: 3vw;
-  }
-
-  .table-container {
-    /* background: #fafafa; */
-    padding: 0px;
-    /* border-radius: 4px; */
-    /* margin-top: 24px; */
-    overflow-x: auto;
-    white-space: nowrap;
-  }
 }
 </style>

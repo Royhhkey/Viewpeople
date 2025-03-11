@@ -19,8 +19,6 @@ const emit = defineEmits(['cellClick']);
 const handleCellClick = (record, column) => {
   console.log('clicked', record, column);
   if (column.key === 'inactive') {
-    // 处理点击事件
-    // emit('cellClick');
     emit('cellClick', record);
   }
 };
@@ -60,19 +58,39 @@ const handleCellClick = (record, column) => {
 }
 .clickable-cell {
   cursor: pointer;
+  border-bottom: #cfcfcf 1px solid;
   /* color: #1890ff; */
 }
 
-:deep(.ant-table) {
+@media (max-width: 768px) {
+  :deep(.ant-table) {
   background: #fff;
 }
 
 :deep(.ant-table-container) {
   border-radius: 4px;
   overflow: hidden;
+  font-size: 2.34vw;
+}
+
+:deep(.ant-table-thead > tr > th) {
+  font-size: 10px;
+  padding: 12px;
+  white-space: normal;
+  word-break: break-all;
+  text-align: center;
+}
+
+:deep(.ant-table-tbody > tr > td) {
+  padding: 8px;
+  white-space: normal;
+  word-break: break-all;
+  text-align: center;
 }
 
 :deep(.ant-table-content) {
   overflow-x: auto;
+}
+
 }
 </style>

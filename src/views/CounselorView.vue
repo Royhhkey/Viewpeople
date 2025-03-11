@@ -35,31 +35,31 @@ const columns = [
     title: '单位',
     dataIndex: 'unit',
     key: 'unit',
-    width: '20%'
+    width: '20vw'
   },
   {
     title: '总人数',
     dataIndex: 'total',
     key: 'total',
-    width: '10%'
+    width: '10vw'
   },
   {
     title: '在校人数',
     dataIndex: 'inSchool',
     key: 'inSchool',
-    width: '10%'
+    width: '10vw'
   },
   {
     title: '活动人数',
     dataIndex: 'active',
     key: 'active',
-    width: '10%'
+    width: '10vw'
   },
   {
     title: '在校但无活动人数',
     dataIndex: 'inactive',
     key: 'inactive',
-    width: '20%'
+    width: '20vw'
   }
 ];
 const  handleCellClick = (record) => {
@@ -116,7 +116,7 @@ onMounted(()=>{
 <template>
   <div class="view-container">
     <div class="header">
-      <h2>辅导员数据统计</h2>
+      <h2>单位数据统计</h2>
       <a-date-picker
         v-model:value="selectedDate"
         @change="handleDateChange"
@@ -128,11 +128,12 @@ onMounted(()=>{
     </div>
     
     <div class="statistics-container">
-      <div class="chart-container">
-        <CircleChart chartId="class1Chart" :data="studentStats" />
-      </div>
+      <div class="chart-wrapper">
 
+        <CircleChart chartId="undergraduateChart" :data="studentStats" />
+      </div>
     </div>
+
     <div class="table-container">
       <DataTable :dataSource="tableData" :columns="columns"  @cell-click="handleCellClick"/>
     </div>
@@ -145,6 +146,8 @@ onMounted(()=>{
   background: #fff;
   border-radius: 4px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  min-height: 100vh;
+
 }
 
 .header {
@@ -160,21 +163,14 @@ onMounted(()=>{
   flex-wrap: wrap;
 }
 
-.chart-container {
+.chart-wrapper {
   flex: 1;
   min-width: 300px;
   padding: 16px;
-  background: #fafafa;
+  /* #fafafa */
+  background: #238258; 
   border-radius: 4px;
   margin-bottom: 24px;
-}
-
-.table-container {
-  background: #fafafa;
-  padding: 16px;
-  border-radius: 4px;
-  margin-top: 24px;
-  overflow-x: auto;
 }
 
 /* 移动端适配 */
@@ -193,16 +189,5 @@ onMounted(()=>{
     width: 100%;
   }
 
-  .chart-container {
-    min-width: 100%;
-    padding: 2vw;
-    margin-bottom: 3vw;
-  }
-
-  .table-container {
-    padding: 0px;
-    margin-top: 3vw;
-    white-space: nowrap;
-  }
 }
 </style>
