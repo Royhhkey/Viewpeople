@@ -132,7 +132,7 @@ onMounted(()=>{
 <template>
   <div class="view-container">
     <div class="header">
-      <h2>班导师数据统计</h2>
+      <h2>按日统计</h2>
       <a-date-picker
         v-model:value="selectedDate"
         @change="handleDateChange"
@@ -144,7 +144,7 @@ onMounted(()=>{
     </div>
     
     <div class="statistics-container">
-      <div class="chart-container">
+      <div class="chart-wrapper">
         <CircleChart chartId="class1Chart" :data="studentStats" :title="chartTitle"/>
       </div>
 
@@ -176,13 +176,15 @@ onMounted(()=>{
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
+  background: #fafafa; 
+  justify-content: center;
+
 }
 
-.chart-container {
+.chart-wrapper {
   flex: 1;
-  min-width: 300px;
+  max-width: calc(60% - 12px); 
   padding: 16px;
-  background: #fafafa;
   border-radius: 4px;
   margin-bottom: 24px;
 }
@@ -204,10 +206,5 @@ onMounted(()=>{
     width: 100%;
   }
 
-  .chart-container {
-    min-width: 100%;
-    padding: 2vw;
-    margin-bottom: 3vw;
-  }
 }
 </style>

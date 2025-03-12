@@ -1,10 +1,7 @@
 import axios from "axios";
 import { message } from 'ant-design-vue';
-// import { useAuthStore } from '../store';
 
-const whiteList = ['/api/getqx'];
 const request = axios.create({
-    // baseURL: import.meta.env.VITE_API_URL,
     // baseURL: import.meta.env.VITE_API_URL,
     baseURL:import.meta.env.VITE_API_URL||'http://10.227.224.6:3301',
     timeout: 3000,

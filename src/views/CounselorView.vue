@@ -131,7 +131,7 @@ onMounted(()=>{
 <template>
   <div class="view-container">
     <div class="header">
-      <h2>单位数据统计</h2>
+      <h2>按日统计</h2>
       <a-date-picker
         v-model:value="selectedDate"
         @change="handleDateChange"
@@ -176,16 +176,20 @@ onMounted(()=>{
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
+  background: #fafafa; 
+  justify-content: center;
+
 }
 
 .chart-wrapper {
   flex: 1;
-  min-width: 300px;
+  max-width: calc(60% - 12px); 
   padding: 16px;
-  /* #fafafa */
-  background: #fafafa; 
   border-radius: 4px;
   margin-bottom: 24px;
+}
+.table-container{
+  margin-top: 3vh;
 }
 
 /* 移动端适配 */
@@ -202,6 +206,9 @@ onMounted(()=>{
 
   .date-picker {
     width: 100%;
+  }
+  .table-container{
+    margin-top: 1.2vh;
   }
 
 }
