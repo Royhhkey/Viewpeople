@@ -1,34 +1,21 @@
 <script setup>
-import { ref,onMounted ,watchEffect} from 'vue';
+import { ref,onMounted } from 'vue';
 import CircleChart from '../components/CircleChart.vue';
 import DataTable from '../components/DataTable.vue';
 import dayjs from 'dayjs';
-import {gettable} from '../api/index.js';
+import {gettable,getstudent } from '../api/index.js';
 import {useRouter } from 'vue-router';
+import { getSpecificAuth } from '../utils/auth';
+const authValue = getSpecificAuth(['2','3']); 
 const router = useRouter();
 const selectedDate = ref(dayjs());
+const chartTitle = ref('本科生');
 const studentStats = ref({
   total: 1234,
   inSchool: 345,
   active: 456
 });
 const tableData = ref([
-  // {
-  //   key: '1',
-  //   unit: '电信qwewqeqwewqeeqwew',
-  //   total: '12340000000',
-  //   inSchool: '12300000000',
-  //   active: '1230000000',
-  //   inactive: '1230000000'
-  // },
-  // {
-  //   key: '2',
-  //   unit: '联通qweXXXXXXXXXXXXXXXXXXXXXXXX',
-  //   total: '456000',
-  //   inSchool: '45',
-  //   active: '45',
-  //   inactive: '45'
-  // },
 ]);
 const columns = [
   {
@@ -63,38 +50,62 @@ const columns = [
   }
 ];
 const  handleCellClick = (record) => {
-  router.push({ 
-    path: '/detail' ,
-    query: { 
-      unit: record.unit,
-      date: selectedDate.value.format('YYYY-MM-DD')
-     }
-  });
-};
-// watchEffect(tableData,() => {
-
-// });
-watchEffect(() => {
-  if (tableData.value && tableData.value.length > 0) {
-    studentStats.value = {
-      total: tableData.value.reduce((sum, item) => sum + Number(item.total), 0),
-      inSchool: tableData.value.reduce((sum, item) => sum + Number(item.inSchool), 0),
-      active: tableData.value.reduce((sum, item) => sum + Number(item.active), 0)
-    };
+  console.log('record', record);
+  const selectedData = tableData.value.find(item => item.key === record.key);
+  if (selectedData) {
+    router.push({
+      path: '/detail',
+      query: {
+        unit: selectedData.unit,
+        date: selectedDate.value.format('YYYY-MM-DD'),
+        DWDM: selectedData.DWDM,
+        qx: authValue
+      }
+    });
   }
-});
+};
+// watchEffect(() => {
+//   if (tableData.value && tableData.value.length > 0) {
+//     studentStats.value = {
+//       total: tableData.value.reduce((sum, item) => sum + Number(item.total), 0),
+//       inSchool: tableData.value.reduce((sum, item) => sum + Number(item.inSchool), 0),
+//       active: tableData.value.reduce((sum, item) => sum + Number(item.active), 0)
+//     };
+//   }
+// });i
+const infoStudent = async () => {
+  const formattedDate = selectedDate.value.format('YYYY-MM-DD');
+  if (!authValue) return;
+
+  const { data } = await getstudent(formattedDate, authValue);
+  const studentType = data.DATA.BKS ? 'BKS' : 'YJS';
+  const studentData = data.DATA[studentType];
+
+  if (studentData) {
+    studentStats.value = {
+      total: studentData.ZRS,
+      inSchool: studentData.ZXRS,
+      active: studentData.ZXHDRS
+    };
+    chartTitle.value = studentData.XSLB;
+  }
+};
 const InfoTable  =async()=>{
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  const {data} = await gettable(formattedDate);
-  tableData.value =data.DATA.map((item, index) => ({
-      key: (index + 1).toString(),
-      unit: item.STU_TYPE,
-      total: item.STU_TOTAL,
-      inSchool: item.STU_SCHOOL,
-      active: item.STU_ACTIVE,
-      inactive: item.STU_NEGATIVE
-  }));
-  console.log(data);
+  if(authValue){
+    // const {data} = await gettable(formattedDate);
+    const {data} = await gettable(formattedDate,"6");
+
+    tableData.value =data.DATA.map((item, index) => ({
+        key: (index + 1).toString(),
+        unit: item.DWMC,
+        total: item.ZRS,
+        inSchool: item.ZXRS,
+        active: item.ZXHDRS,
+        inactive: item.WHDRS
+    }));
+    console.log(data);
+  }
 }
 
 const handleDateChange = (date) => {
@@ -105,11 +116,15 @@ const handleDateChange = (date) => {
     selectedDate.value = date;
   }
   // 这里可以添加获取数据的逻辑
-  InfoTable();
-
+  Init()
 };
-onMounted(()=>{
+const Init  = ()=>{
+  infoStudent()
   InfoTable();
+}
+onMounted(()=>{
+  // InfoTable();
+  Init()
 })
 </script>
 
@@ -130,7 +145,7 @@ onMounted(()=>{
     <div class="statistics-container">
       <div class="chart-wrapper">
 
-        <CircleChart chartId="undergraduateChart" :data="studentStats" />
+        <CircleChart chartId="undergraduateChart" :data="studentStats" :title="chartTitle"/>
       </div>
     </div>
 

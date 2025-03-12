@@ -22,13 +22,15 @@ export const getstudent = (date,qx) => {
         }
     })
 }
-export const getinactivestudent = (date,type) => {
+export const getinactivestudent = (date,qx,dwdm,lbdm) => {
     return request({
         url: '/2025/03/06/getdetail',
         method: 'post',
         data:{
+            dwdm:dwdm,
+            lbdm:lbdm,
             date:date,
-            type:type
+            qx:qx
         }
     })
 }

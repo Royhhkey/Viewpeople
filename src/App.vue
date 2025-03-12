@@ -29,6 +29,7 @@ const test = async () => {
     const userAuth = Array.isArray(data.DATA) ? 
        data.DATA.map(item => item.QX) : 
        [data.DATA.QX];
+    console.log("userAuth",userAuth);
     authStore.setUserAuth(userAuth);  // 存储到 pinia
     // const userAuth = data.DATA.map(item => item.QX);
     // 过滤出用户有权限看到的菜单项

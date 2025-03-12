@@ -4,9 +4,10 @@ import CircleChart from '../components/CircleChart.vue';
 import DataTable from '../components/DataTable.vue';
 import dayjs from 'dayjs';
 import { useRouter } from 'vue-router';
-const router = useRouter();
+import { getSpecificAuth } from '../utils/auth';
 import {gettable,getstudent} from '../api/index.js';
-
+const router = useRouter();
+const authValue = getSpecificAuth(['1']); // 单位权限
 const selectedDate = ref(dayjs());
 const studentBK = ref({
   total: 0,
@@ -19,30 +20,7 @@ const studentYJ = ref({
   active: 0
 });
 const tableData = ref([
-  {
-    key: '1',
-    unit: '电信',
-    total: '1234',
-    inSchool: '123',
-    active: '123',
-    inactive: '123'
-  },
-  {
-    key: '2',
-    unit: '文传',
-    total: '12345',
-    inSchool: '123',
-    active: '',
-    inactive: ''
-  },
-  {
-    key: '3',
-    unit: '电子信息工程学院',
-    total: '12345',
-    inSchool: '123',
-    active: '',
-    inactive: ''
-  }
+
 ]);
 
 const columns = [
@@ -89,43 +67,51 @@ const handleDateChange = (date) => {
   Init()
 };
 const  handleCellClick = (record) => {
-  router.push({ 
-    path: '/detail' ,
-    query: { 
-      unit: record.unit,
-      date: selectedDate.value.format('YYYY-MM-DD')
-     }
-  });
-  // 处理单元格点击事件
+  const selectedData = tableData.value.find(item => item.key === record.key);
+  if (selectedData) {
+    router.push({
+      path: '/detail',
+      query: {
+        unit: selectedData.unit,
+        date: selectedDate.value.format('YYYY-MM-DD'),
+        DWDM: selectedData.DWDM,
+        LBDM: selectedData.LBDM,
+        qx: authValue
+      }
+    });
+  }
 };
 
-const InfoTable  =async()=>{
+const InfoTable = async () => {
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  const {data} = await gettable(formattedDate);
-  tableData.value =data.DATA.map((item, index) => ({
+  if (authValue) {
+    const { data } = await gettable(formattedDate, authValue);
+    tableData.value = data.DATA.map((item, index) => ({
       key: (index + 1).toString(),
-      unit: item.STU_TYPE,
-      total: item.STU_TOTAL,
-      inSchool: item.STU_SCHOOL,
-      active: item.STU_ACTIVE,
-      inactive: item.STU_NEGATIVE
-  }));
-
-  console.log(data);
-}
+      unit: item.DWMC,
+      total: item.ZRS,
+      inSchool: item.ZXRS,
+      active: item.ZXHDRS,
+      inactive: item.WHDRS
+    }));
+  }
+};
 const InfoStudent = async()=>{
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  const {data} = await getstudent(formattedDate);
-  studentBK.value = {
-    total: data.BKS.STU_TOTAL,
-    inSchool: data.BKS.STU_SCHOOL,
-    active: data.BKS.STU_ACTIVE
-  };
-  studentYJ.value = {
-    total: data.YJS.STU_TOTAL,
-    inSchool: data.YJS.STU_SCHOOL,
-    active: data.YJS.STU_ACTIVE
-  };
+  if (authValue) {
+    // const {data} = await getstudent(formattedDate,authValue);
+    const {data} = await gettable(formattedDate,"6");
+    studentBK.value = {
+      total: data.BKS.ZRS,
+      inSchool: data.BKS.ZXRS,
+      active: data.BKS.ZXHDRS
+    };
+    studentYJ.value = {
+      total: data.YJS.ZRS,
+      inSchool: data.YJS.ZXRS,
+      active: data.YJS.ZXHDRS
+    };
+  }
 }
 const Init =()=>{
   InfoTable();
@@ -133,23 +119,20 @@ const Init =()=>{
 }
 onMounted(()=>{
   Init()
-
 })
-
-
 </script>
 
 <template>
   <div class="view-container">
     <div class="header">
-      <h2>单位数据统计</h2>
+      <h2>按日统计</h2>
       <a-date-picker
         v-model:value="selectedDate"
         @change="handleDateChange"
         placeholder="选择日期查看数据"
         format="YYYY-MM-DD"
-        :inputReadOnly="true"
         class="date-picker"
+         :inputReadOnly="true"
       />
     </div>
     
@@ -191,20 +174,20 @@ onMounted(()=>{
 .statistics-container {
   display: flex;
   gap: 24px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  margin-top: 24px;
 }
 
 .chart-wrapper {
   flex: 1;
-  min-width: 300px;
+  min-width: 150px;
+  max-width: calc(50% - 12px);
   padding: 16px;
-  /* #fafafa */
-  background: #238258; 
+  background: #fafafa;
   border-radius: 4px;
   margin-bottom: 24px;
 }
 
-/* 移动端适配 */
 @media screen and (max-width: 768px) {
   .view-container {
     padding: 3vw;
@@ -220,5 +203,13 @@ onMounted(()=>{
     width: 100%;
   }
 
+  .statistics-container {
+    gap: 8px;
+  }
+
+  .chart-wrapper {
+    padding: 8px;
+    margin-bottom: 16px;
+  }
 }
 </style>

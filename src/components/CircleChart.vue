@@ -2,6 +2,10 @@
 import { onMounted, watch, onBeforeUnmount, nextTick } from 'vue';
 import * as echarts from 'echarts';
 
+// const calculateendAngle  = (angle) =>{
+//   return angle <=90? 90 - angle : 450 - angle
+// }
+
 const props = defineProps({
   chartId: {
     type: String,
@@ -152,7 +156,9 @@ const initChart = (chartId, data) => {
           }
         ],
         startAngle: 90,
-        endAngle: 90 + (data.inSchool / data.total * 360),
+        endAngle:  450 - Math.min(data.inSchool / data.total, 1) * 360,
+        // endAngle:  90+(data.inSchool / data.total )* 360,
+        // endAngle: calculateendAngle(data.inSchool / data.total * 360),
         animationType: 'scale',
         animationEasing: 'elasticOut',
         animationDelay: function (idx) {
@@ -201,7 +207,9 @@ const initChart = (chartId, data) => {
           }
         ],
         startAngle: 90,
-        endAngle: 90 + (data.active / data.total * 360),
+        // endAngle: calculateendAngle(data.active / data.total * 360),
+        endAngle:450 - Math.min(data.active / data.total, 1) * 360,
+        // endAngle: 90 + (data.active / data.total )* 360,
         animationType: 'scale',
         animationEasing: 'elasticOut',
         animationDelay: function (idx) {

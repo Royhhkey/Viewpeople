@@ -18,11 +18,13 @@
   import { ref, onMounted } from 'vue';
   import DataTable from '../components/DataTable.vue';
   import { getinactivestudent } from '../api/index';
-
   
   const route = useRoute();
   const unit = ref(route.query.unit || '');
   const selectedDate = ref(route.query.date || '');
+  const DWDM = ref(route.query.DWDM || '');
+  const LBDM = ref(route.query.LBDM || '');
+  const authValue  =ref(route.query.qx || '')
   
   const columns = [
     {
@@ -46,21 +48,10 @@
   ];
   
   const tableData = ref([
-    {
-      key: '1',
-      name: '张三',
-      studentId: '1234xxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-      gender: '123'
-    },
-    {
-      key: '2',
-      name: '李四',
-      studentId: '12345',
-      gender: '123'
-    }
+
   ]);
   const getdata  = async () => {
-    const {data} = await getinactivestudent(selectedDate.value,unit.value);
+    const {data} = await getinactivestudent(selectedDate.value,authValue.value,DWDM.value,LBDM.value);
     console.log(data);
     tableData.value =data.DATA.map((item, index) => ({
       key: item.ROWNUM,

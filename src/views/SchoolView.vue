@@ -5,6 +5,8 @@ import DataTable from '../components/DataTable.vue';
 import dayjs from 'dayjs';
 import {gettable,getstudent} from '../api/index.js';
 import { useRouter } from 'vue-router';
+import {getSpecificAuth} from '../utils/auth.js';
+const authValue = getSpecificAuth(['0','4']);
 const router = useRouter();
 const selectedDate = ref(dayjs());
 const studentBK = ref({
@@ -18,30 +20,7 @@ const studentYJ = ref({
   active: 0
 });
 const tableData = ref([
-  {
-    key: '1',
-    unit: '电信',
-    total: '1234',
-    inSchool: '123',
-    active: '123',
-    inactive: '123'
-  },
-  {
-    key: '2',
-    unit: '文传',
-    total: '12345',
-    inSchool: '123',
-    active: '',
-    inactive: ''
-  },
-  {
-    key: '3',
-    unit: '电子信息工程学院',
-    total: '12345',
-    inSchool: '123',
-    active: '',
-    inactive: ''
-  }
+
 ]);
 
 const columns = [
@@ -92,43 +71,59 @@ const handleDateChange = (date) => {
 
 const InfoTable  =async()=>{
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  const {data} = await gettable(formattedDate,'0');
-  console.log(data);
-  tableData.value =data.DATA.map((item, index) => ({
-      key: (index + 1).toString(),
-      unit: item.STU_TYPE,
-      total: item.STU_TOTAL,
-      inSchool: item.STU_SCHOOL,
-      active: item.STU_ACTIVE,
-      inactive: item.STU_NEGATIVE
-  }));
+  console.log("formattedDate",formattedDate);
+  if(authValue){
+    console.log("authValue",authValue);
+    const {data} = await gettable(formattedDate,"6");
 
-  // console.log(data);
+    // const {data} = await gettable(formattedDate,authValue);
+    console.log(data);
+    tableData.value =data.DATA.map((item, index) => ({
+        key: (index + 1).toString(),
+        unit: item.DWMC,
+        total: item.ZRS,
+        inSchool: item.ZXRS,
+        active: item.ZXHDRS,
+        inactive: item.WHDRS,
+        DWDM : item.DWDM,
+        LBDM :item.LBDM
+    }));
+    console.log("tableData",tableData.value);
+
+  }
 }
 const InfoStudent  =async()=>{
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  const {data} = await getstudent(formattedDate,'0');
-  studentBK.value = {
-    total: data.BKS.STU_TOTAL,
-    inSchool: data.BKS.STU_SCHOOL,
-    active: data.BKS.STU_ACTIVE
-  };
-  studentYJ.value = {
-    total: data.YJS.STU_TOTAL,
-    inSchool: data.YJS.STU_SCHOOL,
-    active: data.YJS.STU_ACTIVE
-  };
+  if (authValue) {
+    // const {data} = await getstudent(formattedDate,authValue);
+    const {data} = await gettable(formattedDate,"6");
+
+    studentBK.value = {
+      total: data.BKS.ZRS,
+      inSchool: data.BKS.ZXRS,
+      active: data.BKS.ZXHDRS
+    };
+    studentYJ.value = {
+      total: data.YJS.ZRS,
+      inSchool: data.YJS.ZXRS,
+      active: data.YJS.ZXHDRS
+    };
+  }
 }
 const  handleCellClick = (record) => {
   console.log('record', record);
-  router.push({ 
-    path: '/detail' ,
-    query: { 
-      unit: record.unit,
-      date: selectedDate.value.format('YYYY-MM-DD')
-     }
-  });
-  // 处理单元格点击事件
+  const selectedData = tableData.value.find(item => item.key === record.key);
+  if (selectedData) {
+    router.push({
+      path: '/detail',
+      query: {
+        unit: selectedData.unit,
+        date: selectedDate.value.format('YYYY-MM-DD'),
+        DWDM: selectedData.DWDM,
+        qx: authValue
+      }
+    });
+  }
 };
 
 const Init =()=>{
@@ -136,7 +131,7 @@ const Init =()=>{
   InfoStudent();
 }
 onMounted(()=>{
-  // Init()
+  Init()
 
 })
 
