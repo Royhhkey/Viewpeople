@@ -10,9 +10,9 @@ const authValue = getSpecificAuth(['5']);
 const router = useRouter();
 const selectedDate = ref(dayjs());
 const studentStats = ref({
-  total: 1234,
-  inSchool: 345,
-  active: 456
+  total: 0,
+  inSchool: 0,
+  active: 0 
 });
 const  chartTitle  = ref('本科生');
 const tableData = ref([
@@ -62,7 +62,7 @@ const columns = [
 const InfoStudent = async () => {
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
   if (!authValue) return;
-
+  // const { data } = await getstudent(formattedDate, "6");
   const { data } = await getstudent(formattedDate, authValue);
   const studentType = data.DATA.BKS ? 'BKS' : 'YJS';
   const studentData = data.DATA[studentType];
@@ -80,8 +80,8 @@ const InfoTable  =async()=>{
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
   if (authValue) {
     console.log("authValue",authValue);
-    // const { data } = await gettable(formattedDate, authValue);
-    const {data} = await gettable(formattedDate,"6");
+    const { data } = await gettable(formattedDate, authValue);
+    // const {data} = await gettable(formattedDate,"6");
     tableData.value = data.DATA.map((item, index) => ({
       key: (index + 1).toString(),
       unit: item.DWMC,

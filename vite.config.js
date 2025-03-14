@@ -23,20 +23,20 @@ export default defineConfig({
       output: {
         manualChunks: () => 'everything.js', // 将所有JavaScript合并到一个文件
         plugins: [terser()], // 使用terser插件进行代码压缩
-        entryFileNames: `static/js/2025/3/6/[name].[hash].js`,
-        chunkFileNames: `static/js/2025/3/6/[name].[hash].js`,
+        entryFileNames: `static/js/2025/03/06/[name].[hash].js`,
+        chunkFileNames: `static/js/2025/03/06/[name].[hash].js`,
         assetFileNames: (assetInfo) => {
           const fileName = assetInfo.name;
 
           // 检查CSS文件
           if (fileName.endsWith('.css')) {
-            return 'static/css/2025/3/6/[name].[hash].css';
+            return 'static/css/2025/03/06/[name].[hash].css';
           }
 
           // 检查图片文件
           const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.ico'];
           if (imageExtensions.some(ext => fileName.endsWith(ext))) {
-            return 'static/images/2025/3/6/[name].[hash][ext]';
+            return 'static/images/2025/03/06/[name].[hash][ext]';
           }
 
           // 默认路径

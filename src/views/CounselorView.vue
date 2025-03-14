@@ -11,9 +11,9 @@ const router = useRouter();
 const selectedDate = ref(dayjs());
 const chartTitle = ref('本科生');
 const studentStats = ref({
-  total: 1234,
-  inSchool: 345,
-  active: 456
+  total: 0,
+  inSchool: 0,
+  active: 0
 });
 const tableData = ref([
 ]);
@@ -76,9 +76,10 @@ const  handleCellClick = (record) => {
 const infoStudent = async () => {
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
   if (!authValue) return;
+  // const { data } = await getstudent(formattedDate, "6");
 
   const { data } = await getstudent(formattedDate, authValue);
-  const studentType = data.DATA.BKS ? 'BKS' : 'YJS';
+  const studentType = data.DATA.BYKS ? 'BYKS' : 'YJS';
   const studentData = data.DATA[studentType];
 
   if (studentData) {
@@ -93,8 +94,8 @@ const infoStudent = async () => {
 const InfoTable  =async()=>{
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
   if(authValue){
-    // const {data} = await gettable(formattedDate);
-    const {data} = await gettable(formattedDate,"6");
+    const {data} = await gettable(formattedDate,authValue);
+    // const {data} = await gettable(formattedDate,"6");
 
     tableData.value =data.DATA.map((item, index) => ({
         key: (index + 1).toString(),

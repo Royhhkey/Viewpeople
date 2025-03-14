@@ -34,18 +34,20 @@ const test = async () => {
     // const userAuth = data.DATA.map(item => item.QX);
     // 过滤出用户有权限看到的菜单项
     const filteredMenus = menuItems.filter(item => 
-      item.auth.some(auth => userAuth.includes(auth))
+      item.auth.some(auth1 => userAuth.includes(auth1))
     );
+    console.log("filteredMenus",filteredMenus);
     visibleMenuItems.value = filteredMenus;
     
     // 如果有权限的菜单不为空，自动跳转到第一个有权限的页面
     if (filteredMenus.length > 0 && route.path === '/') {
+      console.log("filteredMenus[0].path",filteredMenus[0].path);
       router.push(filteredMenus[0].path);
+      
     }
   }
   console.log(data);
 };
-
 onMounted(() => {
   test();
 });
@@ -58,12 +60,13 @@ const handleTabChange = (key) => {
   <a-layout class="layout">
     <a-layout-header v-show="showHeader">
       <div class="header-content" >
-        <h2 class="system-title" >学生在校人数统计</h2>
+        <h2 class="system-title" > 学生在校人数统计</h2>
         <a-tabs
           :activeKey="$route.path.substring(1)"
           @change="handleTabChange"
           class="nav-tabs"
         >
+    
           <a-tab-pane
             v-for="item in visibleMenuItems"
             :key="item.key"

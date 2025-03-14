@@ -2,12 +2,12 @@
     <div class="detail-container">
       <h1 class="page-title">无活动记录在校学生</h1>
       <div class="sub-header">
-        <div class="date">{{ selectedDate }}</div>
+        <div class="date">{{ selectedDate }} 数据</div>
         <div class="unit">{{ unit }}</div>
       </div>
       <div class="table-container">
 
-       <DataTable :dataSource="tableData" :columns="columns"  @cell-click="handleCellClick"/>
+       <DataTable :dataSource="tableData" :columns="columns" />
 
       </div>
     </div>
@@ -31,19 +31,25 @@
       title: '姓名',
       dataIndex: 'name',
       key: 'name',
-      width: '33%'
+      width: '25%'
     },
     {
       title: '学号',
       dataIndex: 'studentId',
       key: 'studentId',
-      width: '33%'
+      width: '25%'
+    },
+    {
+      title: '学生类别',
+      dataIndex: 'LBDM',
+      key: 'LBDM',
+      width: '25%'
     },
     {
       title: '性别',
       dataIndex: 'gender',
       key: 'gender',
-      width: '33%'
+      width: '25%'
     }
   ];
   
@@ -51,22 +57,26 @@
 
   ]);
   const getdata  = async () => {
-    const {data} = await getinactivestudent(selectedDate.value,authValue.value,DWDM.value,LBDM.value);
+    const {data} = await getinactivestudent(selectedDate.value,6,DWDM.value,LBDM.value);
+    // const {data} = await getinactivestudent(selectedDate.value,authValue.value,DWDM.value,LBDM.value);
     console.log(data);
     tableData.value =data.DATA.map((item, index) => ({
       key: item.ROWNUM,
-      name: item.XM,
-      studentId: item.XH,
-      gender: item.XB
+      name: item.XM ,
+      studentId: item.SFRZH,
+      gender: item.XBDM == '1' ? '男' : '女',
+      LBDM: item.LBDM == '03'? '本预科生' : '研究生'
   }));
-
 
   }
   
   onMounted(() => {
     // 这里可以添加获取详细数据的逻辑
     console.log(unit.value);
-    console.log(selectedDate.value);
+    console.log("selectedDate.value",selectedDate.value);
+    console.log("DWDM.value",DWDM.value);
+    console.log("LBDM.value",LBDM.value);
+    console.log("authValue.value",authValue.value);
     getdata();
   });
   </script>

@@ -67,15 +67,16 @@ const handleDateChange = (date) => {
   Init()
 };
 const  handleCellClick = (record) => {
-  const selectedData = tableData.value.find(item => item.key === record.key);
-  if (selectedData) {
+  const selectData = tableData.value.find(item => item.key === record.key);
+  console.log('selectData', selectData);
+  if (selectData) {
     router.push({
       path: '/detail',
       query: {
-        unit: selectedData.unit,
+        unit: selectData.unit,
         date: selectedDate.value.format('YYYY-MM-DD'),
-        DWDM: selectedData.DWDM,
-        LBDM: selectedData.LBDM,
+        DWDM: selectData.DWDM,
+        LBDM: selectData.LBDM,
         qx: authValue
       }
     });
@@ -85,7 +86,9 @@ const  handleCellClick = (record) => {
 const InfoTable = async () => {
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
   if (authValue) {
-    const { data } = await gettable(formattedDate, authValue);
+    const {data} = await gettable(formattedDate,"6");
+
+    // const { data } = await gettable(formattedDate, authValue);
     tableData.value = data.DATA.map((item, index) => ({
       key: (index + 1).toString(),
       unit: item.DWMC,
@@ -99,17 +102,19 @@ const InfoTable = async () => {
 const InfoStudent = async()=>{
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
   if (authValue) {
-    // const {data} = await getstudent(formattedDate,authValue);
-    const {data} = await gettable(formattedDate,"6");
+    const {data} = await getstudent(formattedDate,authValue);
+    // const {data} = await getstudent(formattedDate,"6");
     studentBK.value = {
-      total: data.BKS.ZRS,
-      inSchool: data.BKS.ZXRS,
-      active: data.BKS.ZXHDRS
+      total: data?.DATA?.BYKS?.ZRS ?? 0,
+      inSchool: data?.DATA?.BYKS?.ZXRS ?? 0,
+      active: data?.DATA?.BYKS?.ZXHDRS ?? 0
     };
+
+    // 安全访问研究生数据
     studentYJ.value = {
-      total: data.YJS.ZRS,
-      inSchool: data.YJS.ZXRS,
-      active: data.YJS.ZXHDRS
+      total: data?.DATA?.YJS?.ZRS ?? 0,
+      inSchool: data?.DATA?.YJS?.ZXRS ?? 0,
+      active: data?.DATA?.YJS?.ZXHDRS ?? 0
     };
   }
 }
