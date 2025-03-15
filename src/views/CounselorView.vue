@@ -6,9 +6,13 @@ import dayjs from 'dayjs';
 import {gettable,getstudent } from '../api/index.js';
 import {useRouter } from 'vue-router';
 import { getSpecificAuth } from '../utils/auth';
-const authValue = getSpecificAuth(['2','3']); 
+const authValue = ref(null); 
 const router = useRouter();
 const selectedDate = ref(dayjs());
+const disabledDate = (current) => {
+  // 禁用今天之后的日期
+  return current && current > dayjs().endOf('day');
+};
 const chartTitle = ref('本科生');
 const studentStats = ref({
   total: 0,
@@ -59,7 +63,7 @@ const  handleCellClick = (record) => {
         unit: selectedData.unit,
         date: selectedDate.value.format('YYYY-MM-DD'),
         DWDM: selectedData.DWDM,
-        qx: authValue
+        qx: authValue.value
       }
     });
   }
@@ -72,13 +76,13 @@ const  handleCellClick = (record) => {
 //       active: tableData.value.reduce((sum, item) => sum + Number(item.active), 0)
 //     };
 //   }
-// });i
+// });
 const infoStudent = async () => {
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  if (!authValue) return;
+  if (!authValue.value) return;
   // const { data } = await getstudent(formattedDate, "6");
 
-  const { data } = await getstudent(formattedDate, authValue);
+  const { data } = await getstudent(formattedDate, authValue.value);
   const studentType = data.DATA.BYKS ? 'BYKS' : 'YJS';
   const studentData = data.DATA[studentType];
 
@@ -93,8 +97,8 @@ const infoStudent = async () => {
 };
 const InfoTable  =async()=>{
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  if(authValue){
-    const {data} = await gettable(formattedDate,authValue);
+  if(authValue.value){
+    const {data} = await gettable(formattedDate,authValue.value);
     // const {data} = await gettable(formattedDate,"6");
 
     tableData.value =data.DATA.map((item, index) => ({
@@ -103,9 +107,10 @@ const InfoTable  =async()=>{
         total: item.ZRS,
         inSchool: item.ZXRS,
         active: item.ZXHDRS,
-        inactive: item.WHDRS
+        inactive: item.WHDRS,
+        DWDM: item.DWDM,
+        LBDM: item.LBDM
     }));
-    console.log(data);
   }
 }
 
@@ -123,8 +128,8 @@ const Init  = ()=>{
   infoStudent()
   InfoTable();
 }
-onMounted(()=>{
-  // InfoTable();
+onMounted(async()=>{
+  authValue.value = await getSpecificAuth(['2','3']);
   Init()
 })
 </script>
@@ -139,6 +144,7 @@ onMounted(()=>{
         placeholder="选择日期查看数据"
         format="YYYY-MM-DD"
         :inputReadOnly="true"
+        :disabledDate="disabledDate"
         class="date-picker"
       />
     </div>

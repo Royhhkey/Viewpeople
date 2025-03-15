@@ -6,13 +6,17 @@ import dayjs from 'dayjs';
 import {gettable  ,getstudent} from '../api/index.js';
 import {useRouter } from 'vue-router';
 import  {getSpecificAuth } from '../utils/auth.js';
-const authValue = getSpecificAuth(['5']); 
+const authValue = ref(null); 
 const router = useRouter();
 const selectedDate = ref(dayjs());
+const disabledDate = (current) => {
+  // 禁用今天之后的日期
+  return current && current > dayjs().endOf('day');
+};
 const studentStats = ref({
   total: 0,
   inSchool: 0,
-  active: 0 
+  active: 0
 });
 const  chartTitle  = ref('本科生');
 const tableData = ref([
@@ -61,9 +65,9 @@ const columns = [
 // });
 const InfoStudent = async () => {
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  if (!authValue) return;
+  if (!authValue.value) return;
   // const { data } = await getstudent(formattedDate, "6");
-  const { data } = await getstudent(formattedDate, authValue);
+  const { data } = await getstudent(formattedDate, authValue.value);
   const studentType = data.DATA.BKS ? 'BKS' : 'YJS';
   const studentData = data.DATA[studentType];
 
@@ -78,9 +82,8 @@ const InfoStudent = async () => {
 };
 const InfoTable  =async()=>{
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  if (authValue) {
-    console.log("authValue",authValue);
-    const { data } = await gettable(formattedDate, authValue);
+  if (authValue.value) {
+    const { data } = await gettable(formattedDate, authValue.value);
     // const {data} = await gettable(formattedDate,"6");
     tableData.value = data.DATA.map((item, index) => ({
       key: (index + 1).toString(),
@@ -88,7 +91,9 @@ const InfoTable  =async()=>{
       total: item.ZRS,
       inSchool: item.ZXRS,
       active: item.ZXHDRS,
-      inactive: item.WHDRS
+      inactive: item.WHDRS,
+      DWDM: item.DWDM,
+      LBDM: item.LBDM
     }));
   }
 }
@@ -119,12 +124,13 @@ const  handleCellClick = (record) => {
         unit: selectedData.unit,
         date: selectedDate.value.format('YYYY-MM-DD'),
         DWDM: selectedData.DWDM,
-        qx: authValue
+        qx: authValue.value
       }
     });
   }
 };
-onMounted(()=>{
+onMounted(async()=>{
+  authValue.value = await getSpecificAuth(['5']);
   Init();
 })
 </script>
@@ -139,6 +145,7 @@ onMounted(()=>{
         placeholder="选择日期查看数据"
         format="YYYY-MM-DD"
         :inputReadOnly="true"
+        :disabledDate="disabledDate"
         class="date-picker"
       />
     </div>

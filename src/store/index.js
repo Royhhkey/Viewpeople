@@ -14,3 +14,17 @@ export const useAuthStore = defineStore('auth', {
     // }
   }
 });
+// import { defineStore } from 'pinia'
+
+// export const useAuthStore = defineStore('auth', {
+//   state: () => ({
+//     userAuth: []
+//   }),
+//   actions: {
+//     setUserAuth(authData) {
+//       this.userAuth = Array.isArray(authData) ? 
+//         authData : 
+//         [authData?.QX || '']
+//     }
+//   }
+// })

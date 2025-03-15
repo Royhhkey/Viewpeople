@@ -1,13 +1,17 @@
 <script setup>
-import { ref ,onMounted} from 'vue';
+import { ref ,onMounted } from 'vue';
 import CircleChart from '../components/CircleChart.vue';
 import DataTable from '../components/DataTable.vue';
 import dayjs from 'dayjs';
 import {gettable,getstudent} from '../api/index.js';
 import { useRouter } from 'vue-router';
 import {getSpecificAuth} from '../utils/auth.js';
-const authValue = getSpecificAuth(['0','4']);
+const authValue =  ref(null);
 const router = useRouter();
+const disabledDate = (current) => {
+  // 禁用今天之后的日期
+  return current && current > dayjs().endOf('day');
+};
 const selectedDate = ref(dayjs());
 const studentBK = ref({
   total: 0,
@@ -69,13 +73,15 @@ const handleDateChange = (date) => {
 };
 
 
-const InfoTable  =async()=>{
-  const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  if(authValue){
-    console.log("authValue",authValue);
-    const {data} = await gettable(formattedDate,"6");
 
-    // const {data} = await gettable(formattedDate,authValue);
+const InfoTable  =async()=>{
+  console.log("InfoTable");
+  const formattedDate = selectedDate.value.format('YYYY-MM-DD');
+  console.log("authValue",authValue.value);
+  if(authValue.value){
+    // const {data} = await gettable(formattedDate,"6");
+
+    const {data} = await gettable(formattedDate,authValue.value);
     console.log("InfoTable",data);
     tableData.value =data.DATA.map((item, index) => ({
         key: (index + 1).toString(),
@@ -88,14 +94,13 @@ const InfoTable  =async()=>{
         LBDM :item.LBDM
     }));
     console.log("tableData",tableData.value);
-
   }
 }
 const InfoStudent  =async()=>{
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  if (authValue) {
-    // const {data} = await getstudent(formattedDate,authValue);
-    const {data} = await getstudent(formattedDate,"6");
+  if (authValue.value) {
+    const {data} = await getstudent(formattedDate,authValue.value);
+    // const {data} = await getstudent(formattedDate,"6");
 
       // 安全访问本科生数据
     studentBK.value = {
@@ -122,7 +127,7 @@ const  handleCellClick = (record) => {
         unit: selectedData.unit,
         date: selectedDate.value.format('YYYY-MM-DD'),
         DWDM: selectedData.DWDM,
-        qx: authValue
+        qx: authValue.value
       }
     });
   }
@@ -133,7 +138,9 @@ const Init =()=>{
   InfoTable();
   InfoStudent();
 }
-onMounted(()=>{
+onMounted(async ()=>{
+  authValue.value = await getSpecificAuth(['0', '4']);
+  // console.log("authStore",authStore);
   Init()
 })
 
@@ -151,6 +158,7 @@ onMounted(()=>{
         format="YYYY-MM-DD"
         class="date-picker"
          :inputReadOnly="true"
+         :disabledDate="disabledDate"
       />
     </div>
     

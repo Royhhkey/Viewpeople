@@ -9,12 +9,7 @@ const route = useRoute();
 const authStore = useAuthStore();
 
 const showHeader = computed(() => route.name !== 'Detail');
-// const menuItems = [
-//   { key: 'school', label: '校级', path: '/school' },
-//   { key: 'unit', label: '单位', path: '/unit' },
-//   { key: 'counselor', label: '辅导员', path: '/counselor' },
-//   { key: 'teacher', label: '班导师', path: '/teacher' }
-// ];
+
 const menuItems = [
   { key: 'school', label: '校级', path: '/school', auth: ['0', '4'] },
   { key: 'unit', label: '单位', path: '/unit', auth: ['1'] },
@@ -23,30 +18,28 @@ const menuItems = [
 ];
 const visibleMenuItems = ref(menuItems);
 
+const  userAuth =  ref([]);
 const test = async () => {
   const { data } = await getqx();
+  console.log("data13213123",data);
   if (data && data.DATA) {
-    const userAuth = Array.isArray(data.DATA) ? 
+     userAuth.value = Array.isArray(data.DATA) ? 
        data.DATA.map(item => item.QX) : 
        [data.DATA.QX];
-    console.log("userAuth",userAuth);
     authStore.setUserAuth(userAuth);  // 存储到 pinia
     // const userAuth = data.DATA.map(item => item.QX);
     // 过滤出用户有权限看到的菜单项
     const filteredMenus = menuItems.filter(item => 
-      item.auth.some(auth1 => userAuth.includes(auth1))
+      item.auth.some(auth1 => userAuth.value.includes(auth1))
     );
-    console.log("filteredMenus",filteredMenus);
     visibleMenuItems.value = filteredMenus;
     
     // 如果有权限的菜单不为空，自动跳转到第一个有权限的页面
     if (filteredMenus.length > 0 && route.path === '/') {
       console.log("filteredMenus[0].path",filteredMenus[0].path);
       router.push(filteredMenus[0].path);
-      
     }
   }
-  console.log(data);
 };
 onMounted(() => {
   test();
@@ -79,10 +72,10 @@ const handleTabChange = (key) => {
       <div class="content-container">
         <router-view></router-view>
       </div>
+      <div class="footer">
+        2025©双零团队
+      </div>
     </a-layout-content>
-    <!-- <a-layout-footer style="text-align: center">
-      ©2024 学生数据统计系统
-    </a-layout-footer> -->
   </a-layout>
 </template>
 
@@ -145,6 +138,12 @@ const handleTabChange = (key) => {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 14px;
+  color: #999;
 }
 
 /* 移动端适配 */

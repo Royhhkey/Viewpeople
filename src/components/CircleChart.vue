@@ -2,15 +2,10 @@
 import { onMounted, watch, onBeforeUnmount, nextTick } from 'vue';
 import * as echarts from 'echarts';
 
-const calculateendAngle  = (angle) =>{
-  if(angle == 360) return 450;
-  if(angle > 90){
-    return 450 - angle
-  }
-  else{
-    return 90 - angle
-  }
-}
+const calculateendAngle = (angle) => {
+  if (angle >= 360) return 450;
+  return angle > 90 ? 450 - angle : 90 - angle;
+};
 
 const props = defineProps({
   chartId: {

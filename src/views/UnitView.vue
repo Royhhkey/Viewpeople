@@ -7,8 +7,12 @@ import { useRouter } from 'vue-router';
 import { getSpecificAuth } from '../utils/auth';
 import {gettable,getstudent} from '../api/index.js';
 const router = useRouter();
-const authValue = getSpecificAuth(['1']); // 单位权限
+const authValue = ref(null); // 单位权限
 const selectedDate = ref(dayjs());
+const disabledDate = (current) => {
+  // 禁用今天之后的日期
+  return current && current > dayjs().endOf('day');
+};
 const studentBK = ref({
   total: 0,
   inSchool: 0,
@@ -77,7 +81,7 @@ const  handleCellClick = (record) => {
         date: selectedDate.value.format('YYYY-MM-DD'),
         DWDM: selectData.DWDM,
         LBDM: selectData.LBDM,
-        qx: authValue
+        qx: authValue.value
       }
     });
   }
@@ -85,24 +89,27 @@ const  handleCellClick = (record) => {
 
 const InfoTable = async () => {
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  if (authValue) {
-    const {data} = await gettable(formattedDate,"6");
+  if (authValue.value) {
+    // const {data} = await gettable(formattedDate,"6");
 
-    // const { data } = await gettable(formattedDate, authValue);
+    const { data } = await gettable(formattedDate, authValue.value);
     tableData.value = data.DATA.map((item, index) => ({
       key: (index + 1).toString(),
       unit: item.DWMC,
       total: item.ZRS,
       inSchool: item.ZXRS,
       active: item.ZXHDRS,
-      inactive: item.WHDRS
+      inactive: item.WHDRS,
+      DWDM: item.DWDM,
+      LBDM: item.LBDM
     }));
+
   }
 };
 const InfoStudent = async()=>{
   const formattedDate = selectedDate.value.format('YYYY-MM-DD');
-  if (authValue) {
-    const {data} = await getstudent(formattedDate,authValue);
+  if (authValue.value) {
+    const {data} = await getstudent(formattedDate,authValue.value);
     // const {data} = await getstudent(formattedDate,"6");
     studentBK.value = {
       total: data?.DATA?.BYKS?.ZRS ?? 0,
@@ -122,7 +129,8 @@ const Init =()=>{
   InfoTable();
   InfoStudent();
 }
-onMounted(()=>{
+onMounted(async()=>{
+  authValue.value = await getSpecificAuth(['1']);
   Init()
 })
 </script>
@@ -138,6 +146,7 @@ onMounted(()=>{
         format="YYYY-MM-DD"
         class="date-picker"
          :inputReadOnly="true"
+         :disabledDate="disabledDate"
       />
     </div>
     

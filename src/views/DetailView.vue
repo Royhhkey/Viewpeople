@@ -57,8 +57,8 @@
 
   ]);
   const getdata  = async () => {
-    const {data} = await getinactivestudent(selectedDate.value,6,DWDM.value,LBDM.value);
-    // const {data} = await getinactivestudent(selectedDate.value,authValue.value,DWDM.value,LBDM.value);
+    // const {data} = await getinactivestudent(selectedDate.value,6,DWDM.value,LBDM.value);
+    const {data} = await getinactivestudent(selectedDate.value,authValue.value,DWDM.value,LBDM.value);
     console.log(data);
     tableData.value =data.DATA.map((item, index) => ({
       key: item.ROWNUM,
