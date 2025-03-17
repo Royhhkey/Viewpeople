@@ -18,7 +18,8 @@ const props = defineProps({
     default: () => ({
       total: 0,
       inSchool: 0,
-      active: 0
+      active: 0,
+      inactive: 0
     })
   },
   title: {
@@ -66,15 +67,18 @@ const initChart = (chartId, data) => {
         return `${name}: ${dataItem?.value || 0}人`;
       }
     },
-    // grid:{
-    //   containLabel: true,
-    //   bottom: '15%'        // 为图例预留空间
-    // },
+    grid: {
+      left: '20%', // 为图例预留左侧空间
+      right: '10%',
+      top: '10%',
+      bottom: '80%',
+      containLabel: true // 包含标签
+    },
     series: [
       {
         name: '总人数',
         type: 'pie',
-        radius: ['75%', '80%'],
+        radius: ['65%', '70%'],
         label: {
           show: false,
           position: 'center'
@@ -123,7 +127,7 @@ const initChart = (chartId, data) => {
       {
         name: '在校人数',
         type: 'pie',
-        radius: ['60%', '65%'],
+        radius: ['50%', '55%'],
         label: {
           show: false,
           position: 'center'
@@ -162,7 +166,6 @@ const initChart = (chartId, data) => {
           }
         ],
         startAngle: 90,
-        // endAngle:  450 - Math.min(data.inSchool / data.total, 1) * 360,
         endAngle: calculateendAngle(data.inSchool / data.total * 360),
         animationType: 'scale',
         animationEasing: 'elasticOut',
@@ -173,7 +176,7 @@ const initChart = (chartId, data) => {
       {
         name: '在校活动人数',
         type: 'pie',
-        radius: ['45%', '50%'],
+        radius: ['35%', '40%'],
         label: {
           show: false,
           position: 'center'
@@ -194,7 +197,7 @@ const initChart = (chartId, data) => {
         data: [
           { 
             value: data.active, 
-            name: '在校活动', 
+            name: '在校活动人数', 
             itemStyle: { 
               color: {
                 type: 'linear',
@@ -213,14 +216,62 @@ const initChart = (chartId, data) => {
         ],
         startAngle: 90,
         endAngle: calculateendAngle(data.active / data.total * 360),
-        // endAngle:450 - Math.min(data.active / data.total, 1) * 360,
         animationType: 'scale',
         animationEasing: 'elasticOut',
         animationDelay: function (idx) {
           return Math.random() * 200 + 200;
         }
+      },
+      {
+        name: '在校无活动人数',
+        type: 'pie',
+        radius: ['20%', '25%'],
+        label: {
+          show: false,
+          position: 'center'
+        },
+        emphasis: {
+          scale: true,
+          scaleSize: 5,
+          label: {
+            show: true,
+            fontSize: 14,
+            fontWeight: 'bold',
+            formatter: '{b}\n{c} 人' 
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: [
+          { 
+            value: data.inactive, 
+            name: '在校无活动人数', 
+            itemStyle: { 
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [{
+                  offset: 0, color: '#ff4d4f'
+                }, {
+                  offset: 1, color: '#ff7875'
+                }]
+              }
+            } 
+          }
+        ],
+        startAngle: 90,
+        endAngle: calculateendAngle(data.inactive / data.total * 360),
+        animationType: 'scale',
+        animationEasing: 'elasticOut',
+        animationDelay: function (idx) {
+          return Math.random() * 200 + 300;
+        }
       }
-    ]
+    ],
   };
   chartInstance.setOption(option);
   
@@ -290,12 +341,14 @@ watch(() => props.data, (newData) => {
 
 @media (max-width: 768px) {
   .chart-container {
-    padding: 8px;
+    padding: 0px;
   }
   .chart {
-    height: 200px;
-    /* margin: 10px 0;      */
-
+    height: 280px;
+  }
+  :deep(.echarts-container) {
+    transform: scale(0.8);
+    transform-origin: center center;
   }
 }
 </style>

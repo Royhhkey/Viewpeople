@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps ,defineEmits} from 'vue';
+import { defineProps, defineEmits, computed } from 'vue';
 
 const props = defineProps({
   dataSource: {
@@ -12,6 +12,10 @@ const props = defineProps({
     required: true,
     default: () => []
   }
+});
+
+const isLoading = computed(() => {
+  return !props.dataSource || props.dataSource.length === 0;
 });
 
 const emit = defineEmits(['cellClick']);
@@ -27,7 +31,7 @@ const handleCellClick = (record, column) => {
 
 <template>
   <div class="table-container">
-    <a-table :dataSource="dataSource" :columns="columns" :pagination="false" >
+    <a-table :dataSource="dataSource" :columns="columns" :pagination="false" :loading="isLoading">
       <template #headerCell="{ column }">
         <template v-if="column.key === 'unit'">
           单位
@@ -70,11 +74,11 @@ const handleCellClick = (record, column) => {
 :deep(.ant-table-container) {
   border-radius: 4px;
   overflow: hidden;
-  font-size: 2.34vw;
+  font-size: 3.34vw;
 }
 
 :deep(.ant-table-thead > tr > th) {
-  font-size: 2.34vw;
+  font-size: 3.34vw;
   padding: 12px;
   white-space: normal;
   word-break: break-all;

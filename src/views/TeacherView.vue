@@ -16,7 +16,8 @@ const disabledDate = (current) => {
 const studentStats = ref({
   total: 0,
   inSchool: 0,
-  active: 0
+  active: 0,
+  inactive: 0
 });
 const  chartTitle  = ref('本科生');
 const tableData = ref([
@@ -75,7 +76,8 @@ const InfoStudent = async () => {
     studentStats.value = {
       total: studentData.ZRS,
       inSchool: studentData.ZXRS,
-      active: studentData.ZXHDRS
+      active: studentData.ZXHDRS,
+      inactive: studentData.WHDRS
     };
     chartTitle.value = studentData.XSLB;
   }
@@ -211,6 +213,9 @@ onMounted(async()=>{
 
   .date-picker {
     width: 100%;
+  }
+ .chart-wrapper{
+    padding: 5px;
   }
 
 }

@@ -16,12 +16,14 @@ const selectedDate = ref(dayjs());
 const studentBK = ref({
   total: 0,
   inSchool: 0,
-  active: 0
+  active: 0,
+  inactive: 0
 });
 const studentYJ = ref({
   total: 0,
   inSchool: 0,
-  active: 0
+  active: 0,
+  inactive: 0
 });
 const tableData = ref([
 
@@ -106,14 +108,16 @@ const InfoStudent  =async()=>{
     studentBK.value = {
       total: data?.DATA?.BYKS?.ZRS ?? 0,
       inSchool: data?.DATA?.BYKS?.ZXRS ?? 0,
-      active: data?.DATA?.BYKS?.ZXHDRS ?? 0
+      active: data?.DATA?.BYKS?.ZXHDRS ?? 0,
+      inactive: data?.DATA?.BYKS?.WHDRS ?? 0
     };
 
     // 安全访问研究生数据
     studentYJ.value = {
       total: data?.DATA?.YJS?.ZRS ?? 0,
       inSchool: data?.DATA?.YJS?.ZXRS ?? 0,
-      active: data?.DATA?.YJS?.ZXHDRS ?? 0
+      active: data?.DATA?.YJS?.ZXHDRS ?? 0,
+      inactive: data?.DATA?.YJS?.WHDRS?? 0
     };
   }
 }
@@ -234,7 +238,7 @@ onMounted(async ()=>{
   }
 
   .chart-wrapper {
-    padding: 8px;
+    padding: 5px;
     margin-bottom: 16px;
   }
 }
