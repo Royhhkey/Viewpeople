@@ -50,9 +50,10 @@ const initChart = (chartId, data) => {
       }
     },
     legend: {
-      orient: 'horizontal',
-      left: '0%',
-      top: '0%',
+       
+      // orient: 'vertical',
+      left:'0%',
+      top:'0%',
       itemWidth: 8,
       itemHeight: 8,
       textStyle: {
@@ -65,6 +66,10 @@ const initChart = (chartId, data) => {
         return `${name}: ${dataItem?.value || 0}人`;
       }
     },
+    // grid:{
+    //   containLabel: true,
+    //   bottom: '15%'        // 为图例预留空间
+    // },
     series: [
       {
         name: '总人数',
@@ -189,7 +194,7 @@ const initChart = (chartId, data) => {
         data: [
           { 
             value: data.active, 
-            name: '在校活动人数', 
+            name: '在校活动', 
             itemStyle: { 
               color: {
                 type: 'linear',
@@ -283,9 +288,14 @@ watch(() => props.data, (newData) => {
   align-items: center;
 }
 
-/* .chart-placeholder {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-} */
+@media (max-width: 768px) {
+  .chart-container {
+    padding: 8px;
+  }
+  .chart {
+    height: 200px;
+    /* margin: 10px 0;      */
+
+  }
+}
 </style>
