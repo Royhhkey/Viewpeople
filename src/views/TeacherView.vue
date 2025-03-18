@@ -195,9 +195,10 @@ onMounted(async()=>{
   max-width: calc(60% - 12px); 
   padding: 16px;
   border-radius: 4px;
-  margin-bottom: 24px;
 }
-
+.table-container{
+    margin-top: 4vh;
+  }
 
 /* 移动端适配 */
 @media screen and (max-width: 768px) {
@@ -216,6 +217,10 @@ onMounted(async()=>{
   }
  .chart-wrapper{
     padding: 5px;
+
+  }
+  .table-container{
+    margin-top: 2vh;
   }
 
 }

@@ -51,7 +51,7 @@ const initChart = (chartId, data) => {
       }
     },
     legend: {
-       
+       orient:'hertical',
       // orient: 'vertical',
       left:'0%',
       top:'0%',
